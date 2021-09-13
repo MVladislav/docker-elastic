@@ -6,7 +6,7 @@ services:
   ######################################################################################
   ######################################################################################
   elastic-agent:
-    image: docker.elastic.co/beats/elastic-agent:${ELASTICSEARCH_VERSION:-7.13.3}
+    image: docker.elastic.co/beats/elastic-agent:${ELASTICSEARCH_VERSION:-7.14.1}
     deploy:
       mode: replicated
       replicas: 1
