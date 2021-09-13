@@ -1,0 +1,51 @@
+---
+version: "3.8"
+
+services:
+  ######################################################################################
+  ######################################################################################
+  ######################################################################################
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${ELASTICSEARCH_VERSION:-7.14.1}
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        max_replicas_per_node: 1
+        constraints:
+          # - "node.id==${NODE_ID}"
+          - "node.role==${NODE_ROLE}"
+      restart_policy:
+        condition: on-failure
+    ports:
+      - target: 5601
+        published: 5601
+        protocol: tcp
+        mode: host
+    volumes:
+      - kibana:/usr/share/kibana/data
+    environment:
+      ES_JAVA_OPTS: -Xms${KIBANA_MEM_USE_GB:-1g} -Xmx${KIBANA_MEM_USE_GB:-1g}
+      ELASTICSEARCH_HOSTS: ${ELASTICSEARCH_PROTOCOL:-http}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
+      ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-elastic}
+      ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD}
+      XPACK_SECURITY_ENABLED: ${ELASTICSEARCH_ACTIVATE_SECURITY:-true}
+      XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY: ${ELASTICSEARCH_ENC_KEY}
+      XPACK_FLEET_AGENTS_TLSCHECKDISABLED: ${ELASTICSEARCH_ACTIVATE_SECURITY:-true}
+    networks:
+      default: {}
+      elastic_default: {}
+    restart: always
+
+######################################################################################
+######################################################################################
+######################################################################################
+networks:
+  default:
+    driver: ${NETWORK_MODE:-bridge}
+  elastic_default:
+    external:
+      name: ${ELASTICSEARCH_NETWORK_NAME:-elastic_default}
+
+volumes:
+  kibana: {}
