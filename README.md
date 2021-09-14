@@ -17,4 +17,4 @@ this repo is used to deploy **elasticsearch** with **kibana**
 
 then deploy **elastic-agent**
 
-\+ deploy **logstash** from [elastic-stack](https://github.com/shazChaudhry/docker-elastic)
+\+ deploy **logstash** from [pfelk](https://github.com/pfelk/pfelk)

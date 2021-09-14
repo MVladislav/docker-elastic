@@ -91,3 +91,4 @@ $docker-swarm-compose <STACK_NAME>
 
 - <https://www.docker.elastic.co/r/logstash/logstash>
 - <https://github.com/shazChaudhry/docker-elastic>
+- <https://github.com/pfelk/pfelk>
