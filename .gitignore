@@ -7,6 +7,7 @@
 # ---------------------
 
 !/elastic-agent/
+/elastic-agent/*
 !/elastic-agent/.gitignore
 !/elastic-agent/.dockerignore
 !/elastic-agent/README.md
@@ -15,6 +16,7 @@
 # ---------------------
 
 !/elastic-kibana/
+/elastic-kibana/*
 !/elastic-kibana/.gitignore
 !/elastic-kibana/.dockerignore
 !/elastic-kibana/README.md
@@ -23,6 +25,7 @@
 # ---------------------
 
 !/elastic-logstash/
+/elastic-logstash/*
 !/elastic-logstash/.gitignore
 !/elastic-logstash/.dockerignore
 !/elastic-logstash/README.md
@@ -31,6 +34,7 @@
 # ---------------------
 
 !/elasticsearch/
+/elasticsearch/*
 !/elasticsearch/.gitignore
 !/elasticsearch/.dockerignore
 !/elasticsearch/README.md
