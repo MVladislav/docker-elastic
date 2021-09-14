@@ -65,6 +65,7 @@ ELASTICSEARCH_NETWORK_NAME=elastic_default
 - `pfelk-unbound-*`
 - `pfelk-openvpn-*`
 - `apm-*-transaction*`
+- `traces-apm*`
 - `auditbeat-*`
 - `endgame-*`
 - `filebeat-*`
