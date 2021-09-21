@@ -17,27 +17,59 @@ services:
           - "node.role==${NODE_ROLE}"
       restart_policy:
         condition: on-failure
-    # ports:
-    #   - target: 9200
-    #     published: 9200
-    #     mode: host
-    #   - target: 9300
-    #     published: 9300
-    #     mode: host
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65535
+        hard: 65535
+      fsize: -1
+      as: -1
+    ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+        mode: host
     volumes:
       - elasticsearch:/usr/share/elasticsearch/data
+    configs:
+      # - source: config_file
+      #   target: /usr/share/elasticsearch/config/elasticsearch.yml
+      - source: pw_file
+        target: ${ELASTIC_PASSWORD_FILE:-/run/secrets/bootstrapPassword.txt}
+        mode: 0400
+      - source: ssl_key
+        target: ${XPACK_SECURITY_TRANSPORT_SSL_KEY:-/usr/share/elasticsearch/config/elasticsearch_node.pem}
+      - source: ssl_certificate
+        target: ${XPACK_SECURITY_TRANSPORT_SSL_CERTIFICATE:-/usr/share/elasticsearch/config/elasticsearch_node.crt}
     environment:
-      ES_JAVA_OPTS: -Xms${ELASTICSEARCH_MEM_USE_GB:-3g} -Xmx${ELASTICSEARCH_MEM_USE_GB:-3g}
-      ELASTIC_PASSWORD: ${ELASTICSEARCH_PASSWORD}
-      discovery.type: ${DISCOVERY_TYPE:-single-node}
-      bootstrap.memory_lock: ${MEMORY_LOCK:-true}
-      # TAKE_FILE_OWNERSHIP: 1
-      xpack.monitoring.collection.enabled: ${ELASTICSEARCH_ACTIVATE_SECURITY:-true}
-      xpack.security.audit.enabled: ${ELASTICSEARCH_ACTIVATE_SECURITY:-true}
-      xpack.license.self_generated.type: ${ELASTICSEARCH_LICENSE_TYPE:-trial} # basic | trial
-      xpack.security.enabled: ${ELASTICSEARCH_ACTIVATE_SECURITY:-true}
-      xpack.security.authc.api_key.enabled: ${ELASTICSEARCH_ACTIVATE_SECURITY}
+      ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-3g} -Xmx${ELK_MEM_USE_GB:-3g}
+      # ELASTIC_PASSWORD: "swordfish" # NOTE: NOT SECURE
+      ELASTIC_PASSWORD_FILE: ${ELASTIC_PASSWORD_FILE:-/run/secrets/bootstrapPassword.txt}
       network.host: 0.0.0.0
+      discovery.type: ${DISCOVERY_TYPE:-single-node}
+      node.name: ${NODE_NAME:-elasticsearch-docker-default-1}
+      cluster.name: ${CLUSTER_NAME:-elasticsearch-docker-cluster}
+      bootstrap.memory_lock: ${BOOTSTRAP_MEMORY_LOCK:-true}
+      node.store.allow_mmap: ${NODE_STORE_ALLOW_MMAP:-false}
+      ingest.geoip.downloader.enabled: ${INGEST_GEOIP_DOWNLOADER_ENABLED:-false}
+      xpack.security.enabled: ${XPACK_SECURITY_ENABLED:-true}
+      xpack.security.transport.ssl.enabled: ${XPACK_SECURITY_TRANSPORT_SSL_ENABLED:-true}
+      xpack.security.http.ssl.enabled: ${XPACK_SECURITY_HTTP_SSL_ENABLED:-true}
+      xpack.security.authc.token.enabled: ${XPACK_SECURITY_AUTHC_TOKEN_ENABLED:-true}
+      xpack.security.audit.enabled: ${XPACK_SECURITY_AUDIT_ENABLED:-true}
+      xpack.security.authc.realms.file.file1.order: ${XPACK_SECURITY_AUTHC_REALMS_FILE_FILE1_ORDER:-0}
+      xpack.security.authc.realms.native.native1.order: ${XPACK_SECURITY_AUTHC_REALMS_NATIVE_NATIVE1_ORDER:-1}
+      xpack.security.authc.api_key.enabled: ${XPACK_SECURITY_AUTHC_API_KEY_ENABLED:-true}
+      xpack.security.transport.ssl.key: ${XPACK_SECURITY_TRANSPORT_SSL_KEY:-/usr/share/elasticsearch/config/elasticsearch_node.pem}
+      xpack.security.transport.ssl.certificate: ${XPACK_SECURITY_TRANSPORT_SSL_CERTIFICATE:-/usr/share/elasticsearch/config/elasticsearch_node.crt}
+      xpack.security.http.ssl.key: ${XPACK_SECURITY_HTTP_SSL_KEY:-/usr/share/elasticsearch/config/elasticsearch_node.pem}
+      xpack.security.http.ssl.certificate: ${XPACK_SECURITY_HTTP_SSL_CERTIFICATE:-/usr/share/elasticsearch/config/elasticsearch_node.crt}
+      xpack.http.ssl.verification_mode: ${XPACK_HTTP_SSL_VERIFICATION_MODE:-certificate}
+      xpack.security.transport.ssl.verification_mode: ${XPACK_SECURITY_TRANSPORT_SSL_VERIFICATION_MODE:-certificate}
+      xpack.license.self_generated.type: ${XPACK_LICENSE_SELF_GENERATED_TYPE:-basic} # basic | trial
+      action.destructive_requires_name: ${ACTION_DESTRUCTIVE_REQUIRES_NAME:-false}
     networks:
       default: {}
     restart: always
@@ -51,3 +83,13 @@ networks:
 
 volumes:
   elasticsearch: {}
+
+configs:
+  # config_file:
+  #   file: $PWD/config/elasticsearch.yml
+  pw_file:
+    file: $PWD/config/bootstrapPassword.txt
+  ssl_key:
+    file: $PWD/config/elasticsearch_node.pem
+  ssl_certificate:
+    file: $PWD/config/elasticsearch_node.crt

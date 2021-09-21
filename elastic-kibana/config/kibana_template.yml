@@ -1,0 +1,20 @@
+# Default Kibana configuration for docker target
+server.host: "0.0.0.0"
+server.shutdownTimeout: "5s"
+
+elasticsearch.hosts: ["https://elasticsearch:9200"]
+elasticsearch.username: "kibana_system"
+elasticsearch.password: ""
+
+xpack.security.enabled: true
+xpack.security.encryptionKey: "<ADD_HERE>"
+xpack.security.session.idleTimeout: "1h"
+xpack.security.session.lifespan: "30d"
+
+elasticsearch.ssl.verificationMode: none
+
+server.ssl.enabled: true
+server.ssl.key: /usr/share/kibana/config/kibana_node.pem
+server.ssl.certificate: /usr/share/kibana/config/kibana_node.crt
+
+monitoring.ui.container.elasticsearch.enabled: true

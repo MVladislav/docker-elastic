@@ -7,6 +7,10 @@
 ---
 
 - [SETUP](#setup)
+  - [basic](#basic)
+    - [create `.env` file following:](#create-env-file-following)
+    - [create/copy kibana conf file](#createcopy-kibana-conf-file)
+    - [create ssl files](#create-ssl-files)
   - [dashboard](#dashboard)
     - [index patter](#index-patter)
   - [best practice start-up](#best-practice-start-up)
@@ -14,7 +18,9 @@
 
 ---
 
-create `.env` file following:
+## basic
+
+### create `.env` file following:
 
 - _HINT: `ELASTICSEARCH_ENC_KEY` must be 32-chars long_
 - _HINT: `ELASTICSEARCH_PASSWORD` should be changed_
@@ -25,22 +31,24 @@ NODE_ROLE=manager
 NETWORK_MODE=overlay
 
 ELASTICSEARCH_VERSION=7.14.1
-# ELASTICSEARCH_VERSION=7.14.1-amd64
-# ELASTICSEARCH_VERSION=7.14.1-arm64
 
-ELASTICSEARCH_ACTIVATE_SECURITY=true
-ELASTICSEARCH_ENC_KEY=<ENC_KEY>
-
-KIBANA_MEM_USE_GB=1g
-
-ELASTICSEARCH_PROTOCOL=http
-ELASTICSEARCH_HOST=elasticsearch
-ELASTICSEARCH_PORT=9200
-
-ELASTICSEARCH_USERNAME=kibana_system
-ELASTICSEARCH_PASSWORD=<PASSWORD>
+ELK_MEM_USE_GB=1g
 
 ELASTICSEARCH_NETWORK_NAME=elastic_default
+```
+
+### create/copy kibana conf file
+
+do not forget to edit it, with your settings
+
+```sh
+$cp config/kibana_template.yml config/kibana.yml
+```
+
+### create ssl files
+
+```sh
+$openssl genrsa -out config/kibana_node.pem 4096 && openssl req -new -x509 -sha256 -key config/kibana_node.pem -out config/kibana_node.crt -days 365 -subj '/CN=localhost'
 ```
 
 ---
@@ -55,9 +63,11 @@ ELASTICSEARCH_NETWORK_NAME=elastic_default
 - `http-*`
 - `sip-*`
 - `tls-*`
+- `alert-*,conn-*,dns-*,http-*,sip-,tls-*`
 - `pfelk-captive-*`
 - `pfelk-dhcp-*`
 - `pfelk-firewall-*`
+- `pfelk-firewall_processes-*`
 - `pfelk-haproxy-*`
 - `pfelk-snort-*`
 - `pfelk-suricata-*`

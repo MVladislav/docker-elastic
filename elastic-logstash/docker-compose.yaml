@@ -17,6 +17,15 @@ services:
           - "node.role==${NODE_ROLE}"
       restart_policy:
         condition: on-failure
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65535
+        hard: 65535
+      fsize: -1
+      as: -1
     ports:
       - target: 5040
         published: 5040
@@ -48,8 +57,9 @@ services:
       - source: ls_pipelines_config
         target: /usr/share/logstash/config/pipelines.yml
     environment:
+      ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-2g} -Xmx${ELK_MEM_USE_GB:-2g}
+      network.host: 0.0.0.0
       CONFIG_RELOAD_AUTOMATIC: ${LOGSTAST_RELOAD_AUTOMATIC:-true}
-      ES_JAVA_OPTS: -Xms${LOGSTAST_MEM_USE_GB:-2g} -Xmx${LOGSTAST_MEM_USE_GB:-2g}
       ELASTICSEARCH_HOSTS: ${ELASTICSEARCH_PROTOCOL:-http}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
       ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-elastic}
       ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD}

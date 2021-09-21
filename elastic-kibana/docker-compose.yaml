@@ -17,6 +17,15 @@ services:
           - "node.role==${NODE_ROLE}"
       restart_policy:
         condition: on-failure
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65535
+        hard: 65535
+      fsize: -1
+      as: -1
     ports:
       - target: 5601
         published: 5601
@@ -24,14 +33,16 @@ services:
         mode: host
     volumes:
       - kibana:/usr/share/kibana/data
+    configs:
+      - source: config_file
+        target: /usr/share/kibana/config/kibana.yml
+      - source: ssl_key
+        target: ${SERVER_SSL_KEY:-/usr/share/kibana/config/kibana_node.pem}
+      - source: ssl_certificate
+        target: ${SERVER_SSL_CERTIFICATE:-/usr/share/kibana/config/kibana_node.crt}
     environment:
-      ES_JAVA_OPTS: -Xms${KIBANA_MEM_USE_GB:-1g} -Xmx${KIBANA_MEM_USE_GB:-1g}
-      ELASTICSEARCH_HOSTS: ${ELASTICSEARCH_PROTOCOL:-http}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
-      ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-elastic}
-      ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD}
-      XPACK_SECURITY_ENABLED: ${ELASTICSEARCH_ACTIVATE_SECURITY:-true}
-      XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY: ${ELASTICSEARCH_ENC_KEY}
-      XPACK_FLEET_AGENTS_TLSCHECKDISABLED: ${ELASTICSEARCH_ACTIVATE_SECURITY:-true}
+      ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
+      network.host: 0.0.0.0
     networks:
       default: {}
       elastic_default: {}
@@ -49,3 +60,11 @@ networks:
 
 volumes:
   kibana: {}
+
+configs:
+  config_file:
+    file: $PWD/config/kibana.yml
+  ssl_key:
+    file: $PWD/config/kibana_node.pem
+  ssl_certificate:
+    file: $PWD/config/kibana_node.crt
