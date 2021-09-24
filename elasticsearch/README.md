@@ -80,7 +80,7 @@ $echo 'swordfish$4' > config/bootstrapPassword.txt && chmod 600 config/bootstrap
 ### create ssl files
 
 ```sh
-$openssl genrsa -out config/elasticsearch_node.pem 4096 && openssl req -new -x509 -sha256 -key config/elasticsearch_node.pem -out config/elasticsearch_node.crt -days 365 -subj '/CN=localhost'
+$openssl genrsa -out config/elasticsearch_node.pem 4096 && openssl req -new -x509 -sha256 -key config/elasticsearch_node.pem -out config/elasticsearch_node.crt -days 365 -subj '/CN=elasticsearch'
 ```
 
 ---

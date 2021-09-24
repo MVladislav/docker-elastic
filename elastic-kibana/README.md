@@ -48,7 +48,7 @@ $cp config/kibana_template.yml config/kibana.yml
 ### create ssl files
 
 ```sh
-$openssl genrsa -out config/kibana_node.pem 4096 && openssl req -new -x509 -sha256 -key config/kibana_node.pem -out config/kibana_node.crt -days 365 -subj '/CN=localhost'
+$openssl genrsa -out config/kibana_node.pem 4096 && openssl req -new -x509 -sha256 -key config/kibana_node.pem -out config/kibana_node.crt -days 365 -subj '/CN=kibana'
 ```
 
 ---
