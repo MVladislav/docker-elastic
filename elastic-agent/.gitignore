@@ -11,7 +11,3 @@
 !CHANGELOG.md
 !LICENCE
 !README.md
-
-!config/
-config/*
-!config/*_template.yml
