@@ -6,17 +6,15 @@ elasticsearch.hosts: ["https://elasticsearch:9200"]
 elasticsearch.username: "kibana_system"
 elasticsearch.password: ""
 
-xpack.security.enabled: true
-xpack.security.encryptionKey: "<ADD_HERE>"
-xpack.encryptedSavedObjects.encryptionKey: "<ADD_HERE>"
-xpack.security.session.idleTimeout: "1h"
-xpack.security.session.lifespan: "30d"
+xpack.encryptedSavedObjects.encryptionKey: "<ADD_HERE (32_characters)>"
 
 elasticsearch.ssl.verificationMode: none
 
 server.ssl.enabled: true
-server.ssl.key: /usr/share/kibana/config/kibana_node.pem
-server.ssl.certificate: /usr/share/kibana/config/kibana_node.crt
+server.ssl.key: /usr/share/kibana/config/kibana_node_key.pem
+server.ssl.certificate: /usr/share/kibana/config/kibana_node.pem
 
 monitoring.ui.container.elasticsearch.enabled: true
 xpack.task_manager.monitored_stats_health_verbose_log.enabled: true
+xpack.reporting.roles.enabled: false
+xpack.reporting.kibanaServer.hostname: localhost

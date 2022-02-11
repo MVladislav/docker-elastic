@@ -15,12 +15,15 @@ xpack.security.authc.realms.file.file1.order: 0
 xpack.security.authc.realms.native.native1.order: 1
 xpack.security.authc.api_key.enabled: true
 
-xpack.security.transport.ssl.key: /usr/share/elasticsearch/config/elasticsearch_node.pem
-xpack.security.transport.ssl.certificate: /usr/share/elasticsearch/config/elasticsearch_node.crt
-xpack.security.http.ssl.key: /usr/share/elasticsearch/config/elasticsearch_node.pem
-xpack.security.http.ssl.certificate: /usr/share/elasticsearch/config/elasticsearch_node.crt
-xpack.http.ssl.verification_mode: certificate
-xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.http.ssl.key: certs/elasticsearch_node.key
+xpack.security.http.ssl.certificate: certs/elasticsearch_node.crt
+
+xpack.security.transport.ssl.key: certs/elasticsearch_node.key
+xpack.security.transport.ssl.certificate: certs/elasticsearch_node.crt
+
+xpack.http.ssl.verification_mode: certificate # certificate | none
+xpack.security.http.ssl.verification_mode: certificate # certificate | none
+xpack.security.transport.ssl.verification_mode: certificate # certificate | none
 
 xpack.license.self_generated.type: basic # basic | trial
 action.destructive_requires_name: false

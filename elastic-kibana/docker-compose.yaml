@@ -6,17 +6,7 @@ services:
   ######################################################################################
   ######################################################################################
   kibana:
-    image: docker.elastic.co/kibana/kibana:${ELASTICSEARCH_VERSION:-7.14.1}
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        max_replicas_per_node: 1
-        constraints:
-          # - "node.id==${NODE_ID}"
-          - "node.role==${NODE_ROLE}"
-      restart_policy:
-        condition: on-failure
+    image: docker.elastic.co/kibana/kibana:${ELASTICSEARCH_VERSION:-8.0.0}
     ulimits:
       memlock:
         soft: -1
@@ -26,6 +16,15 @@ services:
         hard: 65535
       fsize: -1
       as: -1
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        max_replicas_per_node: 1
+        constraints:
+          - "node.role==${NODE_ROLE:-manager}"
+      restart_policy:
+        condition: on-failure
     ports:
       - target: 5601
         published: 5601
@@ -37,9 +36,9 @@ services:
       - source: config_file
         target: /usr/share/kibana/config/kibana.yml
       - source: ssl_key
-        target: ${SERVER_SSL_KEY:-/usr/share/kibana/config/kibana_node.pem}
+        target: ${SERVER_SSL_KEY:-/usr/share/kibana/config/certs/kibana_node_key.pem}
       - source: ssl_certificate
-        target: ${SERVER_SSL_CERTIFICATE:-/usr/share/kibana/config/kibana_node.crt}
+        target: ${SERVER_SSL_CERTIFICATE:-/usr/share/kibana/config/certs/kibana_node.pem}
     environment:
       ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
       network.host: 0.0.0.0
@@ -47,6 +46,15 @@ services:
       default: {}
       elastic_default: {}
     restart: always
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
 
 ######################################################################################
 ######################################################################################
@@ -65,6 +73,6 @@ configs:
   config_file:
     file: $PWD/config/kibana.yml
   ssl_key:
-    file: $PWD/config/kibana_node.pem
+    file: $PWD/config/ssl/kibana_node_key.pem
   ssl_certificate:
-    file: $PWD/config/kibana_node.crt
+    file: $PWD/config/ssl/kibana_node.pem

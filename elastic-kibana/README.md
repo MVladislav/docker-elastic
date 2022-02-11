@@ -22,15 +22,12 @@
 
 ### create `.env` file following:
 
-- _HINT: `ELASTICSEARCH_ENC_KEY` must be 32-chars long_
-- _HINT: `ELASTICSEARCH_PASSWORD` should be changed_
-
 ```env
 NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-ELASTICSEARCH_VERSION=7.14.1
+ELASTICSEARCH_VERSION=8.0.0
 
 ELK_MEM_USE_GB=1g
 
@@ -48,7 +45,7 @@ $cp config/kibana_template.yml config/kibana.yml
 ### create ssl files
 
 ```sh
-$openssl genrsa -out config/kibana_node.pem 4096 && openssl req -new -x509 -sha256 -key config/kibana_node.pem -out config/kibana_node.crt -days 365 -subj '/CN=kibana'
+$openssl genrsa -out config/kibana_node.pem 4096 && openssl req -new -x509 -sha256 -key config/ssl/kibana_node_key.pem -out config/ssl/kibana_node.pem -days 365 -subj '/CN=kibana'
 ```
 
 ---
@@ -138,3 +135,4 @@ $docker-swarm-compose <STACK_NAME>
 - <https://www.elastic.co/downloads/kibana>
 - <https://www.docker.elastic.co/r/kibana/kibana>
 - <https://github.com/shazChaudhry/docker-elastic>
+- <https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html>

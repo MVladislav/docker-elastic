@@ -22,18 +22,17 @@
 
 ### create `.env` file following:
 
-- _HINT: `ELASTICSEARCH_PASSWORD` should be changed_
-
 ```env
 NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-ELASTICSEARCH_VERSION=7.14.1
+ELASTICSEARCH_VERSION=8.0.0
 
 ELK_MEM_USE_GB=3g
 
-ELASTIC_PASSWORD_FILE=run/secrets/bootstrapPassword.txt
+ELASTIC_PASSWORD_FILE=/run/secrets/bootstrapPassword.txt
+NETWORK_HOST=0.0.0.0
 DISCOVERY_TYPE=single-node
 NODE_NAME=elasticsearch-docker-default-1
 CLUSTER_NAME=elasticsearch-docker-cluster
@@ -41,24 +40,28 @@ CLUSTER_NAME=elasticsearch-docker-cluster
 BOOTSTRAP_MEMORY_LOCK=true
 NODE_STORE_ALLOW_MMAP=false
 INGEST_GEOIP_DOWNLOADER_ENABLED=false
-ACTION_DESTRUCTIVE_REQUIRES_NAME=false
-XPACK_LICENSE_SELF_GENERATED_TYPE=basic # basic | trial
 
 XPACK_SECURITY_ENABLED=true
+XPACK_SECURITY_AUTHC_TOKEN_ENABLED=true
 XPACK_SECURITY_AUDIT_ENABLED=true
 XPACK_SECURITY_AUTHC_REALMS_FILE_FILE1_ORDER=0
 XPACK_SECURITY_AUTHC_REALMS_NATIVE_NATIVE1_ORDER=1
-XPACK_SECURITY_AUTHC_TOKEN_ENABLED=true
 XPACK_SECURITY_AUTHC_API_KEY_ENABLED=true
 
 XPACK_SECURITY_TRANSPORT_SSL_ENABLED=true
 XPACK_SECURITY_HTTP_SSL_ENABLED=true
-XPACK_SECURITY_TRANSPORT_SSL_KEY=/usr/share/elasticsearch/config/elasticsearch_node.pem
-XPACK_SECURITY_TRANSPORT_SSL_CERTIFICATE=/usr/share/elasticsearch/config/elasticsearch_node.crt
-XPACK_SECURITY_HTTP_SSL_KEY=/usr/share/elasticsearch/config/elasticsearch_node.pem
-XPACK_SECURITY_HTTP_SSL_CERTIFICATE=/usr/share/elasticsearch/config/elasticsearch_node.crt
-XPACK_SECURITY_TRANSPORT_SSL_VERIFICATION_MODE=certificate
-XPACK_HTTP_SSL_VERIFICATION_MODE=certificate
+
+XPACK_SECURITY_HTTP_SSL_KEY=certs/elasticsearch_node.key
+XPACK_SECURITY_HTTP_SSL_CERTIFICATE=certs/elasticsearch_node.crt
+XPACK_SECURITY_TRANSPORT_SSL_KEY=certs/elasticsearch_node.key
+XPACK_SECURITY_TRANSPORT_SSL_CERTIFICATE=certs/elasticsearch_node.crt
+
+XPACK_HTTP_SSL_VERIFICATION_MODE=none # certificate | none
+XPACK_SECURITY_HTTP_SSL_VERIFICATION_MODE=none # certificate | none
+XPACK_SECURITY_TRANSPORT_SSL_VERIFICATION_MODE=none # certificate | none
+
+XPACK_LICENSE_SELF_GENERATED_TYPE=basic # basic | trial
+ACTION_DESTRUCTIVE_REQUIRES_NAME=false
 ```
 
 ### create/copy elasticsearch conf file [optional]
@@ -77,10 +80,18 @@ change it to your secure password
 $echo 'swordfish$4' > config/bootstrapPassword.txt && chmod 600 config/bootstrapPassword.txt
 ```
 
+if something goes wrong you can reset it this way:
+
+> can also be used to set pw for user like 'kibana_system'
+
+```sh
+$docker exec -it elasticsearch /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
+```
+
 ### create ssl files
 
 ```sh
-$openssl genrsa -out config/elasticsearch_node.pem 4096 && openssl req -new -x509 -sha256 -key config/elasticsearch_node.pem -out config/elasticsearch_node.crt -days 365 -subj '/CN=elasticsearch'
+$openssl genrsa -out config/ssl/elasticsearch_node.key 4096 && openssl req -new -x509 -sha256 -key config/ssl/elasticsearch_node.key -out config/ssl/elasticsearch_node.crt -days 365 -subj '/CN=elasticsearch'
 ```
 
 ---
@@ -148,3 +159,4 @@ $sysctl -w vm.max_map_count=262144
 - <https://www.elastic.co/downloads/elasticsearch>
 - <https://www.docker.elastic.co/r/elasticsearch/elasticsearch>
 - <https://github.com/shazChaudhry/docker-elastic>
+- <https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html>
