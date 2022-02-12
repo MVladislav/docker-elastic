@@ -9,7 +9,7 @@
 - [SETUP](#setup)
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
-    - [create/copy elasticsearch conf file [optional]](#createcopy-elasticsearch-conf-file-optional)
+    - [create/copy elasticsearch conf file [optional (not active in composer)]](#createcopy-elasticsearch-conf-file-optional-not-active-in-composer)
     - [create password file, for initial elastic password](#create-password-file-for-initial-elastic-password)
     - [create ssl files](#create-ssl-files)
   - [best practice start-up](#best-practice-start-up)
@@ -56,15 +56,15 @@ XPACK_SECURITY_HTTP_SSL_CERTIFICATE=certs/elasticsearch_node.crt
 XPACK_SECURITY_TRANSPORT_SSL_KEY=certs/elasticsearch_node.key
 XPACK_SECURITY_TRANSPORT_SSL_CERTIFICATE=certs/elasticsearch_node.crt
 
-XPACK_HTTP_SSL_VERIFICATION_MODE=none # certificate | none
-XPACK_SECURITY_HTTP_SSL_VERIFICATION_MODE=none # certificate | none
-XPACK_SECURITY_TRANSPORT_SSL_VERIFICATION_MODE=none # certificate | none
+XPACK_HTTP_SSL_VERIFICATION_MODE=certificate # certificate | none
+XPACK_SECURITY_HTTP_SSL_VERIFICATION_MODE=certificate # certificate | none
+XPACK_SECURITY_TRANSPORT_SSL_VERIFICATION_MODE=certificate # certificate | none
 
 XPACK_LICENSE_SELF_GENERATED_TYPE=basic # basic | trial
 ACTION_DESTRUCTIVE_REQUIRES_NAME=false
 ```
 
-### create/copy elasticsearch conf file [optional]
+### create/copy elasticsearch conf file [optional (not active in composer)]
 
 do not forget to edit it, with your settings
 
@@ -74,7 +74,9 @@ $cp config/elasticsearch_template.yml config/elasticsearch.yml
 
 ### create password file, for initial elastic password
 
-change it to your secure password
+example command to create it:
+
+> change it to your secure password
 
 ```sh
 $echo 'swordfish$4' > config/bootstrapPassword.txt && chmod 600 config/bootstrapPassword.txt
@@ -82,7 +84,7 @@ $echo 'swordfish$4' > config/bootstrapPassword.txt && chmod 600 config/bootstrap
 
 if something goes wrong you can reset it this way:
 
-> can also be used to set pw for user like 'kibana_system'
+> can also be used to set pw for user like 'kibana_system, logstash_system, ...'
 
 ```sh
 $docker exec -it elasticsearch /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic

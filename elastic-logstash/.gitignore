@@ -13,3 +13,4 @@
 !README.md
 
 !config/
+config/logstash/config/logstash.yml

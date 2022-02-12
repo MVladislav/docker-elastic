@@ -7,12 +7,17 @@
 ---
 
 - [SETUP](#setup)
+  - [basic](#basic)
+    - [create `.env` file following:](#create-env-file-following)
+    - [create/copy elasticsearch conf file [optional (not active in composer)]](#createcopy-elasticsearch-conf-file-optional-not-active-in-composer)
   - [best practice start-up](#best-practice-start-up)
   - [References](#references)
 
 ---
 
-create `.env` file following:
+## basic
+
+### create `.env` file following:
 
 - _HINT: `ELASTICSEARCH_PASSWORD` should be changed_
 
@@ -21,7 +26,7 @@ NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-ELASTICSEARCH_VERSION=7.14.1
+ELASTICSEARCH_VERSION=8.0.0
 
 ELK_MEM_USE_GB=1g
 
@@ -34,8 +39,17 @@ ELASTICSEARCH_PORT=9200
 
 ELASTICSEARCH_USERNAME=logstash_system
 ELASTICSEARCH_PASSWORD=<PASSWORD>
+xpack.monitoring.elasticsearch.password=<PASSWORD>
 
-ELASTICSEARCH_NETWORK_NAME=elastic_default
+ELASTICSEARCH_NETWORK_NAME=elasticsearch
+```
+
+### create/copy elasticsearch conf file [optional (not active in composer)]
+
+do not forget to edit it, with your settings
+
+```sh
+$cp config/logstash/config/logstash_example.yml config/logstash/config/logstash.yml
 ```
 
 ---

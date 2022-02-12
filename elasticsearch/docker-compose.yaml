@@ -80,7 +80,9 @@ services:
 ######################################################################################
 networks:
   default:
+    name: elasticsearch
     driver: ${NETWORK_MODE:-bridge}
+    attachable: true
 
 volumes:
   elasticsearch: {}

@@ -1,6 +1,6 @@
 # pipelines.yml
 ################################################################################
-# Version: 21.03                                                               #
+# Version: 22.01                                                               #
 # Required: Yes                                                                #
 # Description: This is a required file for a pfelk installation                #
 # This file is where you define your pipelines. You can define multiple.       #
@@ -11,5 +11,7 @@
 #
 - pipeline.id: pfelk
   path.config: "/etc/pfelk/conf.d/*.conf"
+#  pipeline.ecs_compatibility: v1
+
 # - pipeline.id: main
 #  path.config: "/etc/logstash/conf.d/*.conf"

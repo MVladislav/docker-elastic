@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - ssl support infos/how-to
   - moved credentials and sensible values into file instead of env-params
 - update gitignore for missing files
+- update to work as version 8.0.0
 
 ### Removed
 

@@ -36,15 +36,15 @@ services:
       - source: config_file
         target: /usr/share/kibana/config/kibana.yml
       - source: ssl_key
-        target: ${SERVER_SSL_KEY:-/usr/share/kibana/config/certs/kibana_node_key.pem}
+        target: ${SERVER_SSL_KEY:-/usr/share/kibana/config/certs/kibana_node.key}
       - source: ssl_certificate
-        target: ${SERVER_SSL_CERTIFICATE:-/usr/share/kibana/config/certs/kibana_node.pem}
+        target: ${SERVER_SSL_CERTIFICATE:-/usr/share/kibana/config/certs/kibana_node.crt}
     environment:
       ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
       network.host: 0.0.0.0
     networks:
       default: {}
-      elastic_default: {}
+      elasticsearch: {}
     restart: always
     healthcheck:
       test:
@@ -62,9 +62,9 @@ services:
 networks:
   default:
     driver: ${NETWORK_MODE:-bridge}
-  elastic_default:
+  elasticsearch:
     external:
-      name: ${ELASTICSEARCH_NETWORK_NAME:-elastic_default}
+      name: ${ELASTICSEARCH_NETWORK_NAME:-elasticsearch}
 
 volumes:
   kibana: {}
@@ -73,6 +73,6 @@ configs:
   config_file:
     file: $PWD/config/kibana.yml
   ssl_key:
-    file: $PWD/config/ssl/kibana_node_key.pem
+    file: $PWD/config/ssl/kibana_node.key
   ssl_certificate:
-    file: $PWD/config/ssl/kibana_node.pem
+    file: $PWD/config/ssl/kibana_node.crt

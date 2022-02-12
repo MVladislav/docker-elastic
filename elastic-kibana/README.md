@@ -31,7 +31,7 @@ ELASTICSEARCH_VERSION=8.0.0
 
 ELK_MEM_USE_GB=1g
 
-ELASTICSEARCH_NETWORK_NAME=elastic_default
+ELASTICSEARCH_NETWORK_NAME=elasticsearch
 ```
 
 ### create/copy kibana conf file
