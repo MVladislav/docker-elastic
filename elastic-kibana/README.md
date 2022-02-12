@@ -63,7 +63,7 @@ $openssl genrsa -out config/kibana_node.pem 4096 && openssl req -new -x509 -sha2
 - `http-*`
 - `sip-*`
 - `tls-*`
-- `alert-*,conn-*,dns-*,http-*,sip-,tls-*`
+- `alert-*,conn-*,dns-*,http-*,sip-*,tls-*`
 - `pfelk-captive-*`
 - `pfelk-dhcp-*`
 - `pfelk-firewall-*`
@@ -74,6 +74,7 @@ $openssl genrsa -out config/kibana_node.pem 4096 && openssl req -new -x509 -sha2
 - `pfelk-squid-*`
 - `pfelk-unbound-*`
 - `pfelk-openvpn-*`
+- `pfelk-captive-*,pfelk-dhcp-*,pfelk-firewall-*,pfelk-firewall_processes-*,pfelk-haproxy-*,pfelk-snort-*,pfelk-suricata-*,pfelk-squid-*,pfelk-unbound-*,pfelk-openvpn-*`
 - `apm-*-transaction*`
 - `traces-apm*`
 - `auditbeat-*`
