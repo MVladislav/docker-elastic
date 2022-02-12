@@ -26,28 +26,39 @@ services:
           - "node.role==${NODE_ROLE:-manager}"
       restart_policy:
         condition: on-failure
-    ports:
-      # - target: 5040 # suricata
-      #   published: 5040
-      #   mode: host
-      # - target: 5044 # beats
-      #   published: 5044
-      #   mode: host
-      # - target: 5190 # haproxy
-      #   published: 5190
-      #   mode: host
-      # - target: 9600 # general information about the Logstash
-      #   published: 9600
-      #   mode: host
-      #   protocol: tcp
-      - target: 5140 # firewall-1 (opnsense)
-        published: 5140
-        mode: host
-        protocol: udp
-      # - target: 5141
-      #   published: 5141 # firewall-2 (pfSense)
-      #   mode: host
-      #   protocol: udp
+      labels:
+        - traefik.enable=true
+        - traefik.docker.lbswarm=true
+        - traefik.docker.network=proxy
+        - traefik.http.routers.logstash-firewall.entrypoints=https
+        - traefik.http.routers.logstash-firewall.rule=Host(`${DOMAIN_FIREWALL?domain variable not set}`)
+        - traefik.http.routers.logstash-firewall.tls=true
+        - traefik.http.routers.logstash-firewall.service=logstash-firewall
+        - traefik.http.services.logstash-firewall.loadbalancer.server.scheme=http
+        - traefik.http.services.logstash-firewall.loadbalancer.server.port=5140
+        - traefik.http.routers.logstash-firewall.middlewares=protected-secured@file
+    # ports:
+    #   # - target: 5040 # suricata
+    #   #   published: 5040
+    #   #   mode: host
+    #   # - target: 5044 # beats
+    #   #   published: 5044
+    #   #   mode: host
+    #   # - target: 5190 # haproxy
+    #   #   published: 5190
+    #   #   mode: host
+    #   # - target: 9600 # general information about the Logstash
+    #   #   published: 9600
+    #   #   mode: host
+    #   #   protocol: tcp
+    #   - target: 5140 # firewall-1 (opnsense)
+    #     published: 5140
+    #     mode: host
+    #     protocol: udp
+    #   # - target: 5141
+    #   #   published: 5141 # firewall-2 (pfSense)
+    #   #   mode: host
+    #   #   protocol: udp
     volumes:
       - ./config/pfelk/conf.d/:/etc/pfelk/conf.d:ro
       - ./config/pfelk/patterns/:/etc/pfelk/patterns:ro

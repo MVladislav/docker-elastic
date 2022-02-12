@@ -33,7 +33,7 @@ services:
         - traefik.http.routers.elasticsearch.rule=Host(`${DOMAIN?domain variable not set}`)
         - traefik.http.routers.elasticsearch.tls=true
         - traefik.http.routers.elasticsearch.service=elasticsearch
-        - traefik.http.services.elasticsearch.loadbalancer.server.scheme=https
+        - traefik.http.services.elasticsearch.loadbalancer.server.scheme=${PROTOCOL:-https}
         - traefik.http.services.elasticsearch.loadbalancer.server.port=9200
         - traefik.http.routers.elasticsearch.middlewares=protected-secured@file
     # ports:

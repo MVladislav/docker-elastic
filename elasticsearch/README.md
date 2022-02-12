@@ -30,6 +30,7 @@ NETWORK_MODE=overlay
 ELASTICSEARCH_VERSION=8.0.0
 
 DOMAIN=elastic.home.local
+PROTOCOL=https
 
 ELK_MEM_USE_GB=3g
 
