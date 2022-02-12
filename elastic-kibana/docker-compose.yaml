@@ -25,11 +25,22 @@ services:
           - "node.role==${NODE_ROLE:-manager}"
       restart_policy:
         condition: on-failure
-    ports:
-      - target: 5601
-        published: 5601
-        protocol: tcp
-        mode: host
+      labels:
+        - traefik.enable=true
+        - traefik.docker.lbswarm=true
+        - traefik.docker.network=proxy
+        - traefik.http.routers.kibana.entrypoints=https
+        - traefik.http.routers.kibana.rule=Host(`${DOMAIN?domain variable not set}`)
+        - traefik.http.routers.kibana.tls=true
+        - traefik.http.routers.kibana.service=kibana
+        - traefik.http.services.kibana.loadbalancer.server.scheme=https
+        - traefik.http.services.kibana.loadbalancer.server.port=5601
+        - traefik.http.routers.kibana.middlewares=protected-secured@file
+    # ports:
+    #   - target: 5601
+    #     published: 5601
+    #     protocol: tcp
+    #     mode: host
     volumes:
       - kibana:/usr/share/kibana/data
     configs:
@@ -43,7 +54,8 @@ services:
       ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
       network.host: 0.0.0.0
     networks:
-      default: {}
+      # default: {}
+      proxy: {}
       elasticsearch: {}
     restart: always
     healthcheck:
@@ -60,8 +72,10 @@ services:
 ######################################################################################
 ######################################################################################
 networks:
-  default:
-    driver: ${NETWORK_MODE:-bridge}
+  # default:
+  #   driver: ${NETWORK_MODE:-bridge}
+  proxy:
+    external: true
   elasticsearch:
     external:
       name: ${ELASTICSEARCH_NETWORK_NAME:-elasticsearch}

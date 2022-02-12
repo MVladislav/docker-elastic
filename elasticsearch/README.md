@@ -29,6 +29,8 @@ NETWORK_MODE=overlay
 
 ELASTICSEARCH_VERSION=8.0.0
 
+DOMAIN=elastic.home.local
+
 ELK_MEM_USE_GB=3g
 
 ELASTIC_PASSWORD_FILE=/run/secrets/bootstrapPassword.txt

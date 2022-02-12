@@ -25,11 +25,22 @@ services:
           - "node.role==${NODE_ROLE:-manager}"
       restart_policy:
         condition: on-failure
-    ports:
-      - target: 9200
-        published: 9200
-        protocol: tcp
-        mode: host
+      labels:
+        - traefik.enable=true
+        - traefik.docker.lbswarm=true
+        - traefik.docker.network=proxy
+        - traefik.http.routers.elasticsearch.entrypoints=https
+        - traefik.http.routers.elasticsearch.rule=Host(`${DOMAIN?domain variable not set}`)
+        - traefik.http.routers.elasticsearch.tls=true
+        - traefik.http.routers.elasticsearch.service=elasticsearch
+        - traefik.http.services.elasticsearch.loadbalancer.server.scheme=https
+        - traefik.http.services.elasticsearch.loadbalancer.server.port=9200
+        - traefik.http.routers.elasticsearch.middlewares=protected-secured@file
+    # ports:
+    #   - target: 9200
+    #     published: 9200
+    #     protocol: tcp
+    #     mode: host
     volumes:
       - elasticsearch:/usr/share/elasticsearch/data
     configs:
@@ -73,6 +84,7 @@ services:
       action.destructive_requires_name: ${ACTION_DESTRUCTIVE_REQUIRES_NAME:-false}
     networks:
       default: {}
+      proxy: {}
     restart: always
 
 ######################################################################################
@@ -83,6 +95,8 @@ networks:
     name: elasticsearch
     driver: ${NETWORK_MODE:-bridge}
     attachable: true
+  proxy:
+    external: true
 
 volumes:
   elasticsearch: {}
