@@ -79,7 +79,8 @@ services:
       xpack.monitoring.elasticsearch.hosts: ${ELASTICSEARCH_PROTOCOL:-https}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
       xpack.monitoring.elasticsearch.username: ${ELASTICSEARCH_USERNAME:-logstash_system}
     networks:
-      default: {}
+      # default: {}
+      proxy: {}
       elasticsearch: {}
     restart: always
 
@@ -87,8 +88,10 @@ services:
 ######################################################################################
 ######################################################################################
 networks:
-  default:
-    driver: ${NETWORK_MODE:-bridge}
+  # default:
+  #   driver: ${NETWORK_MODE:-bridge}
+  proxy:
+    external: true
   elasticsearch:
     external:
       name: ${ELASTICSEARCH_NETWORK_NAME:-elasticsearch}
