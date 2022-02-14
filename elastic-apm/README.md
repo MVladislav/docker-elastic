@@ -97,3 +97,4 @@ $docker-swarm-compose <STACK_NAME>
 
 - <https://www.elastic.co/observability/application-performance-monitoring>
 - <https://www.elastic.co/guide/en/apm/get-started/current/quick-start-overview.html>
+- <https://www.elastic.co/guide/en/apm/guide/master/configuration-ssl.html>

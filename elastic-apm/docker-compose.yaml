@@ -7,9 +7,6 @@ services:
   apm-server:
     image: docker.elastic.co/apm/apm-server:${VERSION:-8.0.0}
     # env_file: .env
-    # privileged: true
-    # stdin_open: true # docker run -i
-    # tty: true # docker run -t
     cap_drop:
       - ALL
     cap_add:
@@ -34,13 +31,6 @@ services:
         constraints:
           # - "node.id==${NODE_ID}"
           - "node.role==${NODE_ROLE:-manager}"
-      resources:
-        limits:
-          cpus: "1"
-          memory: 1G
-        reservations:
-          cpus: "0.1"
-          memory: 500M
       restart_policy:
         condition: on-failure
       labels:
@@ -60,7 +50,7 @@ services:
     #     protocol: tcp
     #     mode: host
     environment:
-      ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
+      ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GBdocker:-1g} -Xmx${ELK_MEM_USE_GBdocker:-1g}
       network.host: 0.0.0.0
       # ELASTICSEARCH_HOSTS: ${ELASTICSEARCH_PROTOCOL:-https}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
       # ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-logstash_system}
@@ -72,20 +62,12 @@ services:
       - source: apm_config
         target: /usr/share/apm-server/apm-server.yml
         mode: 0440
-        # uid: "1000"
-        # gid: "1000"
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      # - data:/root
     command: >
       apm-server -e
-        -E apm-server.rum.enabled=true
-        -E setup.template.settings.index.number_of_replicas=0
-        -E output.elasticsearch.hosts=["${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}"]
-    # -E setup.kibana.host=kibana:5601
-    # -E apm-server.kibana.enabled=true
-    # -E apm-server.kibana.host=kibana:5601
+        script
     networks:
       # default: {}
       proxy: {}
