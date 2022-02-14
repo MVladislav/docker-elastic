@@ -86,6 +86,10 @@ services:
       default: {}
       proxy: {}
     restart: always
+    healthcheck:
+      interval: 20s
+      retries: 10
+      test: curl -s ${PROTOCOL:-https}://localhost:9200/_cluster/health | grep -vq '"status":"red"'
 
 ######################################################################################
 ######################################################################################
