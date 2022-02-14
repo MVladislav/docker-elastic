@@ -1,4 +1,4 @@
-/*
+*
 !.git
 !.github
 !.gitignore
@@ -11,3 +11,13 @@
 !CHANGELOG.md
 !LICENCE
 !README.md
+
+!config/
+config/*
+
+!config/.gitempty
+!config/*_template.yml
+
+!config/ssl/
+config/ssl/*
+!config/ssl/.gitempty

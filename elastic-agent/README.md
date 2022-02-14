@@ -7,6 +7,8 @@
 ---
 
 - [SETUP](#setup)
+  - [basic](#basic)
+    - [create `.env` file following:](#create-env-file-following)
   - [endpoint protection - client setup](#endpoint-protection---client-setup)
     - [install](#install)
     - [enroll and run:](#enroll-and-run)
@@ -18,7 +20,9 @@
 
 ---
 
-create `.env` file following:
+## basic
+
+### create `.env` file following:
 
 - _HINT: `FLEET_SERVER_SERVICE_TOKEN` should be changed, get from elasticsearch_
 
@@ -27,7 +31,11 @@ NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-ELASTICSEARCH_VERSION=7.14.1
+VERSION=8.0.0
+PORT=8200
+
+DOMAIN=agent.home.local
+PROTOCOL=https
 
 ELK_MEM_USE_GB=1g
 
@@ -40,7 +48,7 @@ FLEET_SERVER_SERVICE_TOKEN=<SERVICE_TOKEN>
 FLEET_SERVER_POLICY=<POLICY>
 FLEET_SERVER_INSECURE_HTTP=false
 
-ELASTICSEARCH_NETWORK_NAME=elastic_default
+ELASTICSEARCH_NETWORK_NAME=elasticsearch
 ```
 
 ---
