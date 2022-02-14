@@ -50,7 +50,7 @@ services:
     #     protocol: tcp
     #     mode: host
     environment:
-      ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GBdocker:-1g} -Xmx${ELK_MEM_USE_GBdocker:-1g}
+      ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
       network.host: 0.0.0.0
       # ELASTICSEARCH_HOSTS: ${ELASTICSEARCH_PROTOCOL:-https}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
       # ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-logstash_system}
@@ -65,9 +65,6 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    command: >
-      apm-server -e
-        script
     networks:
       # default: {}
       proxy: {}
@@ -76,7 +73,7 @@ services:
     healthcheck:
       interval: 10s
       retries: 12
-      test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null ${PROTOCOL:-https}://localhost:8200/
+      test: curl --write-out 'HTTP %{http_code}' -k --fail --silent --output /dev/null ${PROTOCOL:-https}://localhost:8200/
 
 ################################################################################
 ################################################################################
