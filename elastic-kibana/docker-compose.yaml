@@ -34,11 +34,11 @@ services:
         - traefik.http.routers.kibana.tls=true
         - traefik.http.routers.kibana.service=kibana
         - traefik.http.services.kibana.loadbalancer.server.scheme=${PROTOCOL:-https}
-        - traefik.http.services.kibana.loadbalancer.server.port=5601
+        - traefik.http.services.kibana.loadbalancer.server.port=${PORT:-5601}
         - traefik.http.routers.kibana.middlewares=protected-secured@file
     # ports:
     #   - target: 5601
-    #     published: 5601
+    #     published: ${PORT:-5601}
     #     protocol: tcp
     #     mode: host
     volumes:

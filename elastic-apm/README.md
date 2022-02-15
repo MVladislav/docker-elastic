@@ -25,10 +25,10 @@ NODE_ROLE=manager
 NETWORK_MODE=overlay
 
 VERSION=8.0.0
-PORT=8200
 
 DOMAIN=apm.home.local
-PROTOCOL=https
+PROTOCOL=http
+PORT=8200
 
 ELK_MEM_USE_GB=1g
 

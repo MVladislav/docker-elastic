@@ -33,8 +33,8 @@ services:
         - traefik.http.routers.elastic-agent.rule=Host(`${DOMAIN?domain variable not set}`)
         - traefik.http.routers.elastic-agent.tls=true
         - traefik.http.routers.elastic-agent.service=elastic-agent
-        - traefik.http.services.elastic-agent.loadbalancer.server.scheme=${PROTOCOL:-https}
-        - traefik.http.services.elastic-agent.loadbalancer.server.port=8220
+        - traefik.http.services.elastic-agent.loadbalancer.server.scheme=${PROTOCOL:-http}
+        - traefik.http.services.elastic-agent.loadbalancer.server.port=${PORT:-8220}
         - traefik.http.routers.elastic-agent.middlewares=protected-secured@file
     # ports:
     #   - target: 8220

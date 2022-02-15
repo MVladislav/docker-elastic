@@ -41,8 +41,8 @@ services:
         - traefik.http.routers.apm.rule=Host(`${DOMAIN?domain variable not set}`)
         - traefik.http.routers.apm.tls=true
         - traefik.http.routers.apm.service=apm
-        - traefik.http.services.apm.loadbalancer.server.scheme=${PROTOCOL:-https}
-        - traefik.http.services.apm.loadbalancer.server.port=8200
+        - traefik.http.services.apm.loadbalancer.server.scheme=${PROTOCOL:-http}
+        - traefik.http.services.apm.loadbalancer.server.port=${PORT:-8200}
         - traefik.http.routers.apm.middlewares=default-secured@file
     # ports:
     #   - target: 8200

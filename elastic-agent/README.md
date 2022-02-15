@@ -32,10 +32,10 @@ NODE_ROLE=manager
 NETWORK_MODE=overlay
 
 VERSION=8.0.0
-PORT=8200
 
 DOMAIN=agent.home.local
-PROTOCOL=https
+PROTOCOL=http
+PORT=8220
 
 ELK_MEM_USE_GB=1g
 
