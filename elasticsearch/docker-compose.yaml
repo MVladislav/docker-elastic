@@ -64,7 +64,7 @@ services:
       cluster.name: ${CLUSTER_NAME:-elasticsearch-docker-cluster}
       bootstrap.memory_lock: ${BOOTSTRAP_MEMORY_LOCK:-true}
       node.store.allow_mmap: ${NODE_STORE_ALLOW_MMAP:-false}
-      ingest.geoip.downloader.enabled: ${INGEST_GEOIP_DOWNLOADER_ENABLED:-false}
+      ingest.geoip.downloader.enabled: ${INGEST_GEOIP_DOWNLOADER_ENABLED:-true}
       xpack.security.enabled: ${XPACK_SECURITY_ENABLED:-true}
       xpack.security.transport.ssl.enabled: ${XPACK_SECURITY_TRANSPORT_SSL_ENABLED:-true}
       xpack.security.http.ssl.enabled: ${XPACK_SECURITY_HTTP_SSL_ENABLED:-true}
