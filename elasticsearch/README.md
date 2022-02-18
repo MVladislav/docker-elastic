@@ -32,6 +32,8 @@ ELASTICSEARCH_VERSION=8.0.0
 DOMAIN=elastic.home.local
 PROTOCOL=http
 PORT=9200
+# default-secured@file | protected-secured@file | admin-secured@file
+MIDDLEWARE_SECURED=default-secured@file
 
 ELK_MEM_USE_GB=3g
 

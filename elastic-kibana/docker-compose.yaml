@@ -35,7 +35,7 @@ services:
         - traefik.http.routers.kibana.service=kibana
         - traefik.http.services.kibana.loadbalancer.server.scheme=${PROTOCOL:-https}
         - traefik.http.services.kibana.loadbalancer.server.port=${PORT:-5601}
-        - traefik.http.routers.kibana.middlewares=protected-secured@file
+        - traefik.http.routers.kibana.middlewares=${MIDDLEWARE_SECURED:-protected-secured@file}
     # ports:
     #   - target: 5601
     #     published: ${PORT:-5601}

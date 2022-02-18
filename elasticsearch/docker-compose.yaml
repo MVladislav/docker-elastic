@@ -35,7 +35,7 @@ services:
         - traefik.http.routers.elasticsearch.service=elasticsearch
         - traefik.http.services.elasticsearch.loadbalancer.server.scheme=${PROTOCOL:-https}
         - traefik.http.services.elasticsearch.loadbalancer.server.port=${PORT:-9200}
-        - traefik.http.routers.elasticsearch.middlewares=protected-secured@file
+        - traefik.http.routers.elasticsearch.middlewares=${MIDDLEWARE_SECURED:-default-secured@file}
     # ports:
     #   - target: 9200
     #     published: 9200

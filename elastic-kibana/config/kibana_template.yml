@@ -3,15 +3,18 @@ server.host: "0.0.0.0"
 server.shutdownTimeout: "5s"
 server.publicBaseUrl: "https://kibana:5601"
 
-elasticsearch.hosts: ["https://elasticsearch:9200"]
-elasticsearch.username: "kibana_system"
-elasticsearch.password: ""
+elasticsearch.hosts:
+  [
+    "${ELASTICSEARCH_PROTOCOL:-https}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}",
+  ]
+elasticsearch.username: "${ELASTICSEARCH_USERNAME:-kibana_system}"
+elasticsearch.password: "${ELASTICSEARCH_PASSWORD:}"
 
-xpack.reporting.encryptionKey: "<ADD_HERE (32_characters)>"
-xpack.security.encryptionKey: "<ADD_HERE (32_characters)>"
-xpack.encryptedSavedObjects.encryptionKey: "<ADD_HERE (32_characters)>"
+xpack.reporting.encryptionKey: "${XPACK_REPORTING_ENCRYPTIONKEY:}"
+xpack.security.encryptionKey: "${XPACK_SECURITY_ENCRYPTIONKEY:}"
+xpack.encryptedSavedObjects.encryptionKey: "${XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY:}"
 
-elasticsearch.ssl.verificationMode: none
+elasticsearch.ssl.verificationMode: ${ELASTICSEARCH_SSL_VERIFICATIONMODE:-full}
 
 server.ssl.enabled: true
 server.ssl.key: /usr/share/kibana/config/certs/kibana_node.key

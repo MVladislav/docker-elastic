@@ -31,6 +31,8 @@ ELASTICSEARCH_VERSION=8.0.0
 DOMAIN_FIREWALL=log-firewall.home.local
 PROTOCOL=http
 PORT_FIREWALL=5140
+# default-secured@file | protected-secured@file | admin-secured@file
+MIDDLEWARE_SECURED=protected-secured@file
 
 ELK_MEM_USE_GB=1g
 

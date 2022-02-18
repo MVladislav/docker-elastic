@@ -14,6 +14,7 @@
   - [dashboard](#dashboard)
     - [index patter](#index-patter)
   - [best practice start-up](#best-practice-start-up)
+  - [Dahboard Examples](#dahboard-examples)
   - [References](#references)
 
 ---
@@ -32,8 +33,22 @@ ELASTICSEARCH_VERSION=8.0.0
 DOMAIN=kibana.home.local
 PROTOCOL=http
 PORT=5601
+# default-secured@file | protected-secured@file | admin-secured@file
+MIDDLEWARE_SECURED=protected-secured@file
 
 ELK_MEM_USE_GB=1g
+
+ELASTICSEARCH_PROTOCOL=https
+ELASTICSEARCH_HOST=elasticsearch
+ELASTICSEARCH_PORT=9200
+
+ELASTICSEARCH_USERNAME=kibana_system
+ELASTICSEARCH_PASSWORD=<PASSWORD>
+ELASTICSEARCH_SSL_VERIFICATIONMODE=none
+
+XPACK_REPORTING_ENCRYPTIONKEY=<ADD_HERE (32_characters)>
+XPACK_SECURITY_ENCRYPTIONKEY=<ADD_HERE (32_characters)>
+XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=<ADD_HERE (32_characters)>
 
 ELASTICSEARCH_NETWORK_NAME=elasticsearch
 ```

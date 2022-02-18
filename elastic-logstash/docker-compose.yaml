@@ -36,7 +36,7 @@ services:
         - traefik.http.routers.logstash-firewall.service=logstash-firewall
         - traefik.http.services.logstash-firewall.loadbalancer.server.scheme=${PROTOCOL:-http}
         - traefik.http.services.logstash-firewall.loadbalancer.server.port=${PORT_FIREWALL:-5140}
-        - traefik.http.routers.logstash-firewall.middlewares=protected-secured@file
+        - traefik.http.routers.logstash-firewall.middlewares=${MIDDLEWARE_SECURED:-protected-secured@file}
     # ports:
     #   # - target: 5040 # suricata
     #   #   published: 5040
