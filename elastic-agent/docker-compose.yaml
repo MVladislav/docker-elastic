@@ -35,7 +35,7 @@ services:
         - traefik.http.routers.elastic-agent.service=elastic-agent
         - traefik.http.services.elastic-agent.loadbalancer.server.scheme=${PROTOCOL:-http}
         - traefik.http.services.elastic-agent.loadbalancer.server.port=${PORT:-8220}
-        - traefik.http.routers.elastic-agent.middlewares=protected-secured@file
+        - traefik.http.routers.elastic-agent.middlewares=${MIDDLEWARE_SECURED:-default-secured@file}
     # ports:
     #   - target: 8220
     #     published: 8220

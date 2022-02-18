@@ -36,6 +36,8 @@ VERSION=8.0.0
 DOMAIN=agent.home.local
 PROTOCOL=http
 PORT=8220
+# default-secured@file | protected-secured@file | admin-secured@file
+MIDDLEWARE_SECURED=default-secured@file
 
 ELK_MEM_USE_GB=1g
 
@@ -74,7 +76,7 @@ $sudo apt install ./elastic-agent-7.14.1-arm64.deb
 ### enroll and run:
 
 ```sh
-$sudo elastic-agent enroll -f --insecure --url=https://<elasticsearch_host>:8220 --enrollment-token=<enrollment_token>
+$sudo elastic-agent enroll -f --insecure --url=https://agent.home.local --enrollment-token=<enrollment_token>
 $sudo systemctl enable elastic-agent
 $sudo systemctl start elastic-agent
 ```
@@ -100,7 +102,7 @@ $tar -xvf elastic-agent-7.14.1-linux-arm64.tar.gz && cd elastic-agent-7.14.1-lin
 #### enroll and run:
 
 ```sh
-$sudo ./elastic-agent install -f --insecure --url=https://<elasticsearch_host>:8220 --enrollment-token=<enrollment_token>
+$sudo ./elastic-agent install -f --insecure --url=https://agent.home.local --enrollment-token=<enrollment_token>
 ```
 
 ---
