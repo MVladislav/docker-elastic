@@ -6,6 +6,7 @@ services:
   ##############################################################################
   apm-server:
     image: docker.elastic.co/apm/apm-server:${VERSION:-8.0.0}
+    env_file: .env
     cap_drop:
       - ALL
     cap_add:
@@ -62,6 +63,7 @@ services:
       # default: {}
       proxy: {}
       elasticsearch: {}
+      kibana: {}
     restart: always
     healthcheck:
       interval: 10s
@@ -80,6 +82,9 @@ networks:
   elasticsearch:
     external:
       name: ${ELASTICSEARCH_NETWORK_NAME:-elasticsearch}
+  kibana:
+    external:
+      name: ${KIBANA_NETWORK_NAME:-kibana}
 #
 # volumes:
 #   data: {}

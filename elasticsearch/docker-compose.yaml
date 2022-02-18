@@ -7,6 +7,7 @@ services:
   ######################################################################################
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION:-8.0.0}
+    # env_file: .env
     ulimits:
       memlock:
         soft: -1

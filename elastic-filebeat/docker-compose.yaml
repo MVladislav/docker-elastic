@@ -6,6 +6,7 @@ services:
   ##############################################################################
   filebeat:
     image: docker.elastic.co/beats/filebeat:${VERSION:-8.0.0}
+    env_file: .env
     cap_drop:
       - ALL
     cap_add:
@@ -46,6 +47,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       elasticsearch: {}
+      kibana: {}
     restart: always
 
 ################################################################################
@@ -55,6 +57,9 @@ networks:
   elasticsearch:
     external:
       name: ${ELASTICSEARCH_NETWORK_NAME:-elasticsearch}
+  kibana:
+    external:
+      name: ${KIBANA_NETWORK_NAME:-kibana}
 
 configs:
   filebeat_config:

@@ -206,11 +206,11 @@ apm-server:
     # Scheme and port can be left out and will be set to the default (`http` and `5601`).
     # In case you specify an additional path, the scheme is required: `http://localhost:5601/path`.
     # IPv6 addresses should always be defined as: `https://[2001:db8::1]:5601`.
-    host: "${KIBANA_HOST:-kibana}:${KIBANA_PORT:-5601}"
+    host: "${KIBANA_HOST:kibana}:${KIBANA_PORT:5601}"
 
     # Optional protocol and basic auth credentials.
-    protocol: "${KIBANA_PROTOCOL:-https}"
-    username: "${KIBANA_USERNAME:-elastic}"
+    protocol: "${KIBANA_PROTOCOL:https}"
+    username: "${KIBANA_USERNAME:elastic}"
     password: "${KIBANA_PASSWORD:}"
 
     # Optional HTTP path.
@@ -236,7 +236,7 @@ apm-server:
     # after very careful consideration. It is primarily intended as a temporary
     # diagnostic mechanism when attempting to resolve TLS errors; its use in
     # production environments is strongly discouraged.
-    ssl.verification_mode: ${SSL_VERIFICATION_MODE:-full}
+    ssl.verification_mode: ${SSL_VERIFICATION_MODE:full}
 
     # List of supported/valid TLS versions. By default all TLS versions 1.0 up to
     # 1.2 are enabled.
@@ -310,7 +310,7 @@ output.elasticsearch:
   # Scheme and port can be left out and will be set to the default (`http` and `9200`).
   # In case you specify and additional path, the scheme is required: `http://localhost:9200/path`.
   # IPv6 addresses should always be defined as: `https://[2001:db8::1]:9200`.
-  hosts: ["${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}"]
+  hosts: ["${ELASTICSEARCH_HOST:elasticsearch}:${ELASTICSEARCH_PORT:9200}"]
 
   # Boolean flag to enable or disable the output module.
   #enabled: true
@@ -319,11 +319,11 @@ output.elasticsearch:
   #compression_level: 0
 
   # Protocol - either `http` (default) or `https`.
-  protocol: "${ELASTICSEARCH_PROTOCOL:-https}"
+  protocol: "${ELASTICSEARCH_PROTOCOL:https}"
 
   # Authentication credentials - either API key or username/password.
   #api_key: "id:api_key"
-  username: "${ELASTICSEARCH_USERNAME:-elastic}"
+  username: "${ELASTICSEARCH_USERNAME:elastic}"
   password: "${ELASTICSEARCH_PASSWORD:}"
 
   # Dictionary of HTTP parameters to pass within the url with index operations.
@@ -387,7 +387,7 @@ output.elasticsearch:
   # after very careful consideration. It is primarily intended as a temporary
   # diagnostic mechanism when attempting to resolve TLS errors; its use in
   # production environments is strongly discouraged.
-  ssl.verification_mode: ${SSL_VERIFICATION_MODE:-full}
+  ssl.verification_mode: ${SSL_VERIFICATION_MODE:full}
 
   # List of supported/valid TLS versions. By default all TLS versions 1.0 up to
   # 1.2 are enabled.

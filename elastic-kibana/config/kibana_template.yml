@@ -3,18 +3,15 @@ server.host: "0.0.0.0"
 server.shutdownTimeout: "5s"
 server.publicBaseUrl: "https://kibana:5601"
 
-elasticsearch.hosts:
-  [
-    "${ELASTICSEARCH_PROTOCOL:-https}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}",
-  ]
-elasticsearch.username: "${ELASTICSEARCH_USERNAME:-kibana_system}"
-elasticsearch.password: "${ELASTICSEARCH_PASSWORD:}"
+elasticsearch.hosts: ["https://elasticsearch:9200"]
+elasticsearch.username: "kibana_system"
+elasticsearch.password: ""
 
-xpack.reporting.encryptionKey: "${XPACK_REPORTING_ENCRYPTIONKEY:}"
-xpack.security.encryptionKey: "${XPACK_SECURITY_ENCRYPTIONKEY:}"
-xpack.encryptedSavedObjects.encryptionKey: "${XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY:}"
+xpack.reporting.encryptionKey: "<ADD_HERE (32_characters)>"
+xpack.security.encryptionKey: "<ADD_HERE (32_characters)>"
+xpack.encryptedSavedObjects.encryptionKey: "<ADD_HERE (32_characters)>"
 
-elasticsearch.ssl.verificationMode: ${ELASTICSEARCH_SSL_VERIFICATIONMODE:-full}
+elasticsearch.ssl.verificationMode: none
 
 server.ssl.enabled: true
 server.ssl.key: /usr/share/kibana/config/certs/kibana_node.key
@@ -24,3 +21,29 @@ monitoring.ui.container.elasticsearch.enabled: true
 xpack.task_manager.monitored_stats_health_verbose_log.enabled: true
 xpack.reporting.roles.enabled: false
 xpack.reporting.kibanaServer.hostname: localhost
+#
+#
+# # Default Kibana configuration for docker target
+# server.host: "0.0.0.0"
+# server.shutdownTimeout: "5s"
+# server.publicBaseUrl: "${PROTOCOL:https}://${DOMAIN:kibana:5601}"
+
+# elasticsearch.hosts:
+#   - "${ELASTICSEARCH_PROTOCOL:https}://${ELASTICSEARCH_HOST:elasticsearch}:${ELASTICSEARCH_PORT:9200}"
+# elasticsearch.username: "${ELASTICSEARCH_USERNAME:kibana_system}"
+# elasticsearch.password: "${ELASTICSEARCH_PASSWORD:}"
+
+# xpack.reporting.encryptionKey: "${XPACK_REPORTING_ENCRYPTIONKEY:}"
+# xpack.security.encryptionKey: "${XPACK_SECURITY_ENCRYPTIONKEY:}"
+# xpack.encryptedSavedObjects.encryptionKey: "${XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY:}"
+
+# elasticsearch.ssl.verificationMode: ${ELASTICSEARCH_SSL_VERIFICATIONMODE:full}
+
+# server.ssl.enabled: true
+# server.ssl.key: /usr/share/kibana/config/certs/kibana_node.key
+# server.ssl.certificate: /usr/share/kibana/config/certs/kibana_node.crt
+
+# monitoring.ui.container.elasticsearch.enabled: true
+# xpack.task_manager.monitored_stats_health_verbose_log.enabled: true
+# xpack.reporting.roles.enabled: false
+# xpack.reporting.kibanaServer.hostname: localhost

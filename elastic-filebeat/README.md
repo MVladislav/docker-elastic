@@ -26,12 +26,26 @@ NETWORK_MODE=overlay
 
 VERSION=8.0.0
 
+ELK_MEM_USE_GB=1g
+
 ELASTICSEARCH_PROTOCOL=https
 ELASTICSEARCH_HOST=elasticsearch
 ELASTICSEARCH_PORT=9200
 
 ELASTICSEARCH_USERNAME=elastic
 ELASTICSEARCH_PASSWORD=<PASSWORD>
+
+KIBANA_PROTOCOL=https
+KIBANA_HOST=kibana
+KIBANA_PORT=5601
+
+KIBANA_USERNAME=elastic
+KIBANA_PASSWORD=<PASSWORD>
+
+SSL_VERIFICATION_MODE=none
+
+ELASTICSEARCH_NETWORK_NAME=elasticsearch
+KIBANA_NETWORK_NAME=kibana
 ```
 
 ### create/copy filebeat conf file
@@ -40,6 +54,14 @@ ELASTICSEARCH_PASSWORD=<PASSWORD>
 
 ```sh
 $cp config/filebeat_template.yml config/filebeat.yml
+```
+
+## create index/dasboards/pipelines
+
+> after filbeat stats, you can run:
+
+```sh
+$docker exec <CONTAINER> filebeat setup -e
 ```
 
 ---

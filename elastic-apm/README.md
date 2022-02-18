@@ -51,6 +51,7 @@ KIBANA_PASSWORD=<PASSWORD>
 SSL_VERIFICATION_MODE=none
 
 ELASTICSEARCH_NETWORK_NAME=elasticsearch
+KIBANA_NETWORK_NAME=kibana
 ```
 
 ### create/copy apm conf file
