@@ -52,12 +52,6 @@ services:
     environment:
       ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
       network.host: 0.0.0.0
-      # ELASTICSEARCH_HOSTS: ${ELASTICSEARCH_PROTOCOL:-https}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
-      # ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-logstash_system}
-      # ELASTICSEARCH_SSL_VERIFICATIONMODE: ${ELASTICSEARCH_SSL_VERIFICATIONMODE:-none}
-      # xpack.monitoring.enabled: ${XPACK_MONITORING_ENABLED:-true}
-      # xpack.monitoring.elasticsearch.hosts: ${ELASTICSEARCH_PROTOCOL:-https}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
-      # xpack.monitoring.elasticsearch.username: ${ELASTICSEARCH_USERNAME:-logstash_system}
     configs:
       - source: apm_config
         target: /usr/share/apm-server/apm-server.yml
