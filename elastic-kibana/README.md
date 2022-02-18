@@ -135,6 +135,12 @@ $docker-swarm-compose <STACK_NAME>
 
 ---
 
+## Dahboard Examples
+
+- <https://github.com/psychogun/zenarmor-kibana-dashboards>
+
+---
+
 ## References
 
 - <https://www.elastic.co/downloads/kibana>
