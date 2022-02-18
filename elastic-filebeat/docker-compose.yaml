@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  ##############################################################################
+  ##############################################################################
+  ##############################################################################
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:${VERSION:-8.0.0}
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65535
+        hard: 65535
+      fsize: -1
+      as: -1
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        max_replicas_per_node: 1
+        constraints:
+          - "node.role==${NODE_ROLE:-manager}"
+      restart_policy:
+        condition: on-failure
+    environment:
+      ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
+      network.host: 0.0.0.0
+    configs:
+      - source: filebeat_config
+        target: /usr/share/filebeat/filebeat.yml
+        mode: 0440
+      - source: m_threatintel_config
+        target: /usr/share/filebeat/modules.d/threatintel.yml
+        mode: 0440
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      elasticsearch: {}
+    restart: always
+
+################################################################################
+################################################################################
+################################################################################
+networks:
+  elasticsearch:
+    external:
+      name: ${ELASTICSEARCH_NETWORK_NAME:-elasticsearch}
+
+configs:
+  filebeat_config:
+    file: $PWD/config/filebeat.yml
+  m_threatintel_config:
+    file: $PWD/config/modules.d/threatintel.yml
