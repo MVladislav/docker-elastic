@@ -1,4 +1,4 @@
-/*
+*
 !.git
 !.github
 !.gitignore
@@ -13,4 +13,14 @@
 !README.md
 
 !config/
-config/logstash/config/logstash.yml
+config/*
+
+!config/.gitempty
+!config/*_template.yml
+
+!config/pfelk/
+!config/pfelk/*
+
+!config/ssl/
+config/ssl/*
+!config/ssl/.gitempty
