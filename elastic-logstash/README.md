@@ -45,17 +45,19 @@ ELASTICSEARCH_PORT=9200
 
 ELASTICSEARCH_USERNAME=logstash_system
 ELASTICSEARCH_PASSWORD=<PASSWORD>
-xpack.monitoring.elasticsearch.password=<PASSWORD>
+
+ELASTICSEARCH_SSL_VERIFICATIONMODE=none
 
 ELASTICSEARCH_NETWORK_NAME=elasticsearch
 ```
 
-### create/copy elasticsearch conf file [optional (not active in composer)]
+### create/copy elasticsearch conf file
 
 do not forget to edit it, with your settings
 
 ```sh
-$cp config/logstash/config/logstash_example.yml config/logstash/config/logstash.yml
+$cp config/logstash_template.yml config/logstash.yml
+$cp config/pipelines_template.yml config/pipelines.yml
 ```
 
 ---

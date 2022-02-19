@@ -64,20 +64,13 @@ services:
       - ./config/pfelk/patterns/:/etc/pfelk/patterns:ro
       - ./config/pfelk/databases/:/etc/pfelk/databases:ro
     configs:
-      # - source: ls_logstash_config
-      #   target: /usr/share/logstash/config/logstash.yml
-      - source: ls_pipelines_config
+      - source: logstash_config
+        target: /usr/share/logstash/config/logstash.yml
+      - source: pipelines_config
         target: /usr/share/logstash/config/pipelines.yml
     environment:
       ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-2g} -Xmx${ELK_MEM_USE_GB:-2g}
       network.host: 0.0.0.0
-      CONFIG_RELOAD_AUTOMATIC: ${LOGSTAST_RELOAD_AUTOMATIC:-true}
-      ELASTICSEARCH_HOSTS: ${ELASTICSEARCH_PROTOCOL:-https}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
-      ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-logstash_system}
-      ELASTICSEARCH_SSL_VERIFICATIONMODE: ${ELASTICSEARCH_SSL_VERIFICATIONMODE:-none}
-      xpack.monitoring.enabled: ${XPACK_MONITORING_ENABLED:-true}
-      xpack.monitoring.elasticsearch.hosts: ${ELASTICSEARCH_PROTOCOL:-https}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
-      xpack.monitoring.elasticsearch.username: ${ELASTICSEARCH_USERNAME:-logstash_system}
     networks:
       # default: {}
       proxy: {}
@@ -97,7 +90,7 @@ networks:
       name: ${ELASTICSEARCH_NETWORK_NAME:-elasticsearch}
 
 configs:
-  # ls_logstash_config:
-  #   file: $PWD/config/logstash/config/logstash.yml
-  ls_pipelines_config:
-    file: $PWD/config/logstash/config/pipelines.yml
+  logstash_config:
+    file: $PWD/config/logstash.yml
+  pipelines_config:
+    file: $PWD/config/pipelines.yml
