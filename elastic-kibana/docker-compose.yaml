@@ -6,7 +6,7 @@ services:
   ######################################################################################
   ######################################################################################
   kibana:
-    image: docker.elastic.co/kibana/kibana:${ELASTICSEARCH_VERSION:-8.0.0}
+    image: docker.elastic.co/kibana/kibana:${VERSION:-8.1.3}
     env_file: .env
     ulimits:
       memlock:
@@ -71,8 +71,8 @@ networks:
   proxy:
     external: true
   elasticsearch:
-    external:
-      name: ${ELASTICSEARCH_NETWORK_NAME:-elasticsearch}
+    name: ${ELASTICSEARCH_NETWORK_NAME:-elasticsearch}
+    external: true
 
 volumes:
   kibana: {}

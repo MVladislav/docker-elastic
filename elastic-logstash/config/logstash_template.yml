@@ -1,13 +1,13 @@
 # logstash.yml
 ################################################################################
-# Version: 21.03                                                               #
-# Required: Yes (DOCKER ONLY                                                   #
+# Version: 22.04                                                               #
+# Required: Yes (DOCKER ONLY)                                                  #
 # Description: This is a required file for a Docker installation               #
 #                                                                              #
 ################################################################################
 #
 http.host: "0.0.0.0"
-#path.config: etc/pfelk/logstash/pipeline/pipelines.yml
+#path.config: /usr/share/logstash/pipeline/pipelines.yml
 
 config.reload.automatic: ${LOGSTAST_RELOAD_AUTOMATIC:true}
 elasticsearch.hosts:

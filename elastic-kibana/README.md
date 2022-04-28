@@ -21,6 +21,8 @@
 
 ## basic
 
+> defined to work with treafik
+
 ### create `.env` file following:
 
 ```env
@@ -28,7 +30,7 @@ NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-ELASTICSEARCH_VERSION=8.0.0
+VERSION=8.1.3
 
 DOMAIN=kibana.home.local
 PROTOCOL=http
@@ -71,6 +73,52 @@ $openssl genrsa -out config/kibana_node.pem 4096 && openssl req -new -x509 -sha2
 
 ## dashboard
 
+### add missing `@timestamp` or any other times
+
+> needed for all internal elastic function usage like security
+
+```http
+PUT <INDEXNAME>-*/_mapping
+{
+  "properties": {
+    "@timestamp": {
+      "type": "alias",
+      "path": "start_time"
+    }
+  }
+}
+```
+
+```http
+PUT <INDEXNAME>-*/_mapping
+{
+  "properties": {
+    "event.ingested": {
+      "type": "alias",
+      "path": "start_time"
+    }
+  }
+}
+```
+
+### add missing `event.category`
+
+> needed for all internal elastic function usage like security.
+>
+> value e.x.: network, file, process
+
+```http
+PUT <INDEXNAME>-*/_mapping
+{
+  "properties": {
+    "event.category": {
+      "type":  "constant_keyword",
+      "value": "network"
+    }
+  }
+}
+```
+
 ### index patter
 
 - `alert-*`
@@ -102,57 +150,10 @@ $openssl genrsa -out config/kibana_node.pem 4096 && openssl req -new -x509 -sha2
 
 ---
 
-## best practice start-up
-
-use docker-swarm to manage and start containers.
-
-for that is in each service following defined:
-
-```yml
-services:
-  ...:
-    ...
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        max_replicas_per_node: 1
-        constraints:
-          # - "node.id==${NODE_ID}"
-          - "node.role==${NODE_ROLE}"
-      restart_policy:
-        condition: on-failure
-    ...
-    ports:
-      - target: ...
-        published: ...
-        mode: host
-```
-
-to start this configuration with all supportings between docker-stack and docker-composer
-run it with following commando:
-
-```sh
-$docker-compose config | docker stack deploy --compose-file - <STACK_NAME>
-```
-
-or create directly an alias for it:
-
-```sh
-$alias docker-swarm-compose="docker-compose config | docker stack deploy --compose-file -"
-```
-
-and run:
-
-```sh
-$docker-swarm-compose <STACK_NAME>
-```
-
----
-
 ## Dahboard Examples
 
 - <https://github.com/psychogun/zenarmor-kibana-dashboards>
+- <https://github.com/pfelk/pfelk/tree/main/etc/pfelk/dashboard>
 
 ---
 

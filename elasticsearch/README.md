@@ -20,6 +20,8 @@
 
 ## basic
 
+> defined to work with treafik
+
 ### create `.env` file following:
 
 ```env
@@ -27,7 +29,7 @@ NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-ELASTICSEARCH_VERSION=8.0.0
+VERSION=8.1.3
 
 DOMAIN=elastic.home.local
 PROTOCOL=http
@@ -100,64 +102,6 @@ $docker exec -it elasticsearch /usr/share/elasticsearch/bin/elasticsearch-reset-
 
 ```sh
 $openssl genrsa -out config/ssl/elasticsearch_node.key 4096 && openssl req -new -x509 -sha256 -key config/ssl/elasticsearch_node.key -out config/ssl/elasticsearch_node.crt -days 365 -subj '/CN=elasticsearch'
-```
-
----
-
-## best practice start-up
-
-use docker-swarm to manage and start containers.
-
-for that is in each service following defined:
-
-```yml
-services:
-  ...:
-    ...
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        max_replicas_per_node: 1
-        constraints:
-          # - "node.id==${NODE_ID}"
-          - "node.role==${NODE_ROLE}"
-      restart_policy:
-        condition: on-failure
-    ...
-    ports:
-      - target: ...
-        published: ...
-        mode: host
-```
-
-to start this configuration with all supportings between docker-stack and docker-composer
-run it with following commando:
-
-```sh
-$docker-compose config | docker stack deploy --compose-file - <STACK_NAME>
-```
-
-or create directly an alias for it:
-
-```sh
-$alias docker-swarm-compose="docker-compose config | docker stack deploy --compose-file -"
-```
-
-and run:
-
-```sh
-$docker-swarm-compose <STACK_NAME>
-```
-
----
-
-## production
-
-run following on the host system:
-
-```sh
-$sysctl -w vm.max_map_count=262144
 ```
 
 ---

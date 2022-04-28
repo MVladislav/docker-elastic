@@ -6,7 +6,7 @@ services:
   ######################################################################################
   ######################################################################################
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION:-8.0.0}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${VERSION:-8.1.3}
     # env_file: .env
     ulimits:
       memlock:
@@ -30,7 +30,7 @@ services:
         - traefik.enable=true
         - traefik.docker.lbswarm=true
         - traefik.docker.network=proxy
-        - traefik.http.routers.elasticsearch.entrypoints=https
+        - traefik.http.routers.elasticsearch.entrypoints=elastic
         - traefik.http.routers.elasticsearch.rule=Host(`${DOMAIN?domain variable not set}`)
         - traefik.http.routers.elasticsearch.tls=true
         - traefik.http.routers.elasticsearch.service=elasticsearch
@@ -42,8 +42,6 @@ services:
     #     published: 9200
     #     protocol: tcp
     #     mode: host
-    volumes:
-      - elasticsearch:/usr/share/elasticsearch/data
     configs:
       # - source: config_file
       #   target: /usr/share/elasticsearch/config/elasticsearch.yml
@@ -56,6 +54,10 @@ services:
         target: /usr/share/elasticsearch/config/${XPACK_SECURITY_TRANSPORT_SSL_KEY:-certs/elasticsearch_node.key}
       - source: ssl_certificate
         target: /usr/share/elasticsearch/config/${XPACK_SECURITY_TRANSPORT_SSL_CERTIFICATE:-certs/elasticsearch_node.crt}
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - elasticsearch:/usr/share/elasticsearch/data
     environment:
       ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-3g} -Xmx${ELK_MEM_USE_GB:-3g}
       ELASTIC_PASSWORD_FILE: ${ELASTIC_PASSWORD_FILE:-/run/secrets/bootstrapPassword.txt}
