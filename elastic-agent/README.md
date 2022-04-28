@@ -7,6 +7,8 @@
 ---
 
 - [SETUP](#setup)
+  - [basic](#basic)
+    - [create `.env` file following:](#create-env-file-following)
   - [endpoint protection - client setup](#endpoint-protection---client-setup)
     - [install](#install)
     - [enroll and run:](#enroll-and-run)
@@ -18,7 +20,11 @@
 
 ---
 
-create `.env` file following:
+## basic
+
+> defined to work with treafik
+
+### create `.env` file following:
 
 - _HINT: `FLEET_SERVER_SERVICE_TOKEN` should be changed, get from elasticsearch_
 
@@ -27,20 +33,67 @@ NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-ELASTICSEARCH_VERSION=7.14.1
-# ELASTICSEARCH_VERSION=7.14.1-amd64
-# ELASTICSEARCH_VERSION=7.14.1-arm64
+VERSION=8.1.3
 
-FLEET_SERVER_ENABLE=true
-FLEET_SERVER_SERVICE_TOKEN=<SERVICE_TOKEN>
+DOMAIN_AGENT=agent.home.local
+PROTOCOL_AGENT=http
+PORT_AGENT=8220
+# default-secured@file | protected-secured@file | admin-secured@file
+MIDDLEWARE_SECURED=default-secured@file
 
-FLEET_SERVER_MEM_USE_GB=1g
+PORT_IPTABLES=9002
+PORT_PFSENSE=9003
 
-ELASTICSEARCH_PROTOCOL=http
+ELK_MEM_USE_GB=1g
+
+ELASTICSEARCH_PROTOCOL=https
 ELASTICSEARCH_HOST=elasticsearch
 ELASTICSEARCH_PORT=9200
 
-ELASTICSEARCH_NETWORK_NAME=elastic_default
+ELASTICSEARCH_USERNAME=elastic
+ELASTICSEARCH_PASSWORD=
+
+KIBANA_PROTOCOL=https
+KIBANA_HOST=kibana
+KIBANA_PORT=5601
+
+KIBANA_USERNAME=elastic
+KIBANA_PASSWORD=
+
+SSL_VERIFICATION_MODE=none
+
+FLEET_SERVER_ENABLE=true
+FLEET_SERVER_SERVICE_TOKEN=<SERVICE_TOKEN>
+FLEET_SERVER_POLICY=<POLICY>
+FLEET_SERVER_INSECURE_HTTP=false
+
+ELASTICSEARCH_NETWORK_NAME=elasticsearch
+```
+
+### create/copy elastic-agent conf file
+
+> do not forget to edit it, with your settings
+
+```sh
+$cp config/elastic-agent_template.yml config/elastic-agent.yml
+```
+
+---
+
+## commands
+
+### reload dashboard
+
+> if removed or broken, you can reload integrations
+
+```sh
+curl --request POST \
+  --url https://kibana:5601/api/fleet/epm/packages/[package name]-[package version] \
+   -u elastic:{PASSWORD} \
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: elastic agent 8.0.0' \
+  --header 'kbn-xsrf: xx' \
+  --data '{ "force": true}'
 ```
 
 ---
@@ -66,7 +119,7 @@ $sudo apt install ./elastic-agent-7.14.1-arm64.deb
 ### enroll and run:
 
 ```sh
-$sudo elastic-agent enroll -f --insecure --url=https://<elasticsearch_host>:8220 --enrollment-token=<enrollment_token>
+$sudo elastic-agent enroll -f --insecure --url=https://agent.home.local --enrollment-token=<enrollment_token>
 $sudo systemctl enable elastic-agent
 $sudo systemctl start elastic-agent
 ```
@@ -92,55 +145,7 @@ $tar -xvf elastic-agent-7.14.1-linux-arm64.tar.gz && cd elastic-agent-7.14.1-lin
 #### enroll and run:
 
 ```sh
-$sudo ./elastic-agent install -f --insecure --url=https://<elasticsearch_host>:8220 --enrollment-token=<enrollment_token>
-```
-
----
-
-## best practice start-up
-
-use docker-swarm to manage and start containers.
-
-for that is in each service following defined:
-
-```yml
-services:
-  ...:
-    ...
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        max_replicas_per_node: 1
-        constraints:
-          # - "node.id==${NODE_ID}"
-          - "node.role==${NODE_ROLE}"
-      restart_policy:
-        condition: on-failure
-    ...
-    ports:
-      - target: ...
-        published: ...
-        mode: host
-```
-
-to start this configuration with all supportings between docker-stack and docker-composer
-run it with following commando:
-
-```sh
-$docker-compose config | docker stack deploy --compose-file - <STACK_NAME>
-```
-
-or create directly an alias for it:
-
-```sh
-$alias docker-swarm-compose="docker-compose config | docker stack deploy --compose-file -"
-```
-
-and run:
-
-```sh
-$docker-swarm-compose <STACK_NAME>
+$sudo ./elastic-agent install -f --insecure --url=https://agent.home.local --enrollment-token=<enrollment_token>
 ```
 
 ---
@@ -150,3 +155,5 @@ $docker-swarm-compose <STACK_NAME>
 - <https://www.elastic.co/guide/en/fleet/current/elastic-agent-container.html>
 - <https://www.elastic.co/guide/en/fleet/7.15/fleet-server.html>
 - <https://www.elastic.co/downloads/elastic-agent>
+- <https://www.elastic.co/guide/en/fleet/current/beats-agent-comparison.html>
+- <https://www.elastic.co/guide/en/fleet/current/fleet-faq.html>

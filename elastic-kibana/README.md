@@ -7,45 +7,117 @@
 ---
 
 - [SETUP](#setup)
+  - [basic](#basic)
+    - [create `.env` file following:](#create-env-file-following)
+    - [create/copy kibana conf file](#createcopy-kibana-conf-file)
+    - [create ssl files](#create-ssl-files)
   - [dashboard](#dashboard)
     - [index patter](#index-patter)
   - [best practice start-up](#best-practice-start-up)
+  - [Dahboard Examples](#dahboard-examples)
   - [References](#references)
 
 ---
 
-create `.env` file following:
+## basic
 
-- _HINT: `ELASTICSEARCH_ENC_KEY` must be 32-chars long_
-- _HINT: `ELASTICSEARCH_PASSWORD` should be changed_
+> defined to work with treafik
+
+### create `.env` file following:
 
 ```env
 NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-ELASTICSEARCH_VERSION=7.14.1
-# ELASTICSEARCH_VERSION=7.14.1-amd64
-# ELASTICSEARCH_VERSION=7.14.1-arm64
+VERSION=8.1.3
 
-ELASTICSEARCH_ACTIVATE_SECURITY=true
-ELASTICSEARCH_ENC_KEY=<ENC_KEY>
+DOMAIN=kibana.home.local
+PROTOCOL=http
+PORT=5601
+# default-secured@file | protected-secured@file | admin-secured@file
+MIDDLEWARE_SECURED=protected-secured@file
 
-KIBANA_MEM_USE_GB=1g
+ELK_MEM_USE_GB=1g
 
-ELASTICSEARCH_PROTOCOL=http
-ELASTICSEARCH_HOST=elasticsearch
-ELASTICSEARCH_PORT=9200
+# ELASTICSEARCH_PROTOCOL=https
+# ELASTICSEARCH_HOST=elasticsearch
+# ELASTICSEARCH_PORT=9200
+#
+# ELASTICSEARCH_USERNAME=kibana_system
+# ELASTICSEARCH_PASSWORD=<PASSWORD>
+# ELASTICSEARCH_SSL_VERIFICATIONMODE=none
+#
+# XPACK_REPORTING_ENCRYPTIONKEY=<ADD_HERE (32_characters)>
+# XPACK_SECURITY_ENCRYPTIONKEY=<ADD_HERE (32_characters)>
+# XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=<ADD_HERE (32_characters)>
 
-ELASTICSEARCH_USERNAME=kibana_system
-ELASTICSEARCH_PASSWORD=<PASSWORD>
+ELASTICSEARCH_NETWORK_NAME=elasticsearch
+```
 
-ELASTICSEARCH_NETWORK_NAME=elastic_default
+### create/copy kibana conf file
+
+do not forget to edit it, with your settings
+
+```sh
+$cp config/kibana_template.yml config/kibana.yml
+```
+
+### create ssl files
+
+```sh
+$openssl genrsa -out config/kibana_node.pem 4096 && openssl req -new -x509 -sha256 -key config/ssl/kibana_node_key.pem -out config/ssl/kibana_node.pem -days 365 -subj '/CN=kibana'
 ```
 
 ---
 
 ## dashboard
+
+### add missing `@timestamp` or any other times
+
+> needed for all internal elastic function usage like security
+
+```http
+PUT <INDEXNAME>-*/_mapping
+{
+  "properties": {
+    "@timestamp": {
+      "type": "alias",
+      "path": "start_time"
+    }
+  }
+}
+```
+
+```http
+PUT <INDEXNAME>-*/_mapping
+{
+  "properties": {
+    "event.ingested": {
+      "type": "alias",
+      "path": "start_time"
+    }
+  }
+}
+```
+
+### add missing `event.category`
+
+> needed for all internal elastic function usage like security.
+>
+> value e.x.: network, file, process
+
+```http
+PUT <INDEXNAME>-*/_mapping
+{
+  "properties": {
+    "event.category": {
+      "type":  "constant_keyword",
+      "value": "network"
+    }
+  }
+}
+```
 
 ### index patter
 
@@ -55,16 +127,20 @@ ELASTICSEARCH_NETWORK_NAME=elastic_default
 - `http-*`
 - `sip-*`
 - `tls-*`
+- `alert-*,conn-*,dns-*,http-*,sip-*,tls-*`
 - `pfelk-captive-*`
 - `pfelk-dhcp-*`
 - `pfelk-firewall-*`
+- `pfelk-firewall_processes-*`
 - `pfelk-haproxy-*`
 - `pfelk-snort-*`
 - `pfelk-suricata-*`
 - `pfelk-squid-*`
 - `pfelk-unbound-*`
 - `pfelk-openvpn-*`
+- `pfelk-captive-*,pfelk-dhcp-*,pfelk-firewall-*,pfelk-firewall_processes-*,pfelk-haproxy-*,pfelk-snort-*,pfelk-suricata-*,pfelk-squid-*,pfelk-unbound-*,pfelk-openvpn-*`
 - `apm-*-transaction*`
+- `traces-apm*`
 - `auditbeat-*`
 - `endgame-*`
 - `filebeat-*`
@@ -74,51 +150,10 @@ ELASTICSEARCH_NETWORK_NAME=elastic_default
 
 ---
 
-## best practice start-up
+## Dahboard Examples
 
-use docker-swarm to manage and start containers.
-
-for that is in each service following defined:
-
-```yml
-services:
-  ...:
-    ...
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        max_replicas_per_node: 1
-        constraints:
-          # - "node.id==${NODE_ID}"
-          - "node.role==${NODE_ROLE}"
-      restart_policy:
-        condition: on-failure
-    ...
-    ports:
-      - target: ...
-        published: ...
-        mode: host
-```
-
-to start this configuration with all supportings between docker-stack and docker-composer
-run it with following commando:
-
-```sh
-$docker-compose config | docker stack deploy --compose-file - <STACK_NAME>
-```
-
-or create directly an alias for it:
-
-```sh
-$alias docker-swarm-compose="docker-compose config | docker stack deploy --compose-file -"
-```
-
-and run:
-
-```sh
-$docker-swarm-compose <STACK_NAME>
-```
+- <https://github.com/psychogun/zenarmor-kibana-dashboards>
+- <https://github.com/pfelk/pfelk/tree/main/etc/pfelk/dashboard>
 
 ---
 
@@ -127,3 +162,4 @@ $docker-swarm-compose <STACK_NAME>
 - <https://www.elastic.co/downloads/kibana>
 - <https://www.docker.elastic.co/r/kibana/kibana>
 - <https://github.com/shazChaudhry/docker-elastic>
+- <https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html>

@@ -6,79 +6,109 @@ services:
   ######################################################################################
   ######################################################################################
   logstash:
-    image: docker.elastic.co/logstash/logstash:${ELASTICSEARCH_VERSION:-7.14.1}
+    image: docker.elastic.co/logstash/logstash:${VERSION:-8.1.3}
+    # user: "0"
+    env_file: .env
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65535
+        hard: 65535
+      fsize: -1
+      as: -1
     deploy:
       mode: replicated
       replicas: 1
       placement:
         max_replicas_per_node: 1
         constraints:
-          # - "node.id==${NODE_ID}"
-          - "node.role==${NODE_ROLE}"
+          - "node.role==${NODE_ROLE:-manager}"
       restart_policy:
         condition: on-failure
-    ports:
-      - target: 5040
-        published: 5040
-        mode: host
-      - target: 5044
-        published: 5044
-        mode: host
-      - target: 5190
-        published: 5190
-        mode: host
-      - target: 9600
-        published: 9600
-        mode: host
-      - target: 5140
-        published: 5140
-        mode: host
-        protocol: udp
-      - target: 5141
-        published: 5141
-        mode: host
-        protocol: udp
+      labels:
+        - traefik.enable=true
+        - traefik.docker.lbswarm=true
+        - traefik.docker.network=proxy
+
+        - traefik.tcp.routers.logstash-opnsense.entrypoints=opnsense
+        # - traefik.tcp.routers.logstash-opnsense.rule=HostSNI(`${DOMAIN?domain variable not set}`)
+        - traefik.tcp.routers.logstash-opnsense.rule=HostSNI(`*`)
+        - traefik.tcp.routers.logstash-opnsense.tls=false
+        - traefik.tcp.routers.logstash-opnsense.tls.passthrough=false
+        - traefik.tcp.routers.logstash-opnsense.service=logstash-opnsense
+        - traefik.tcp.services.logstash-opnsense.loadbalancer.server.port=${PORT_OPNSENSE:-5140}
+    # ports:
+    #   # - target: 5040 # suricata
+    #   #   published: 5040
+    #   #   mode: host
+    #   # - target: 5044 # beats
+    #   #   published: 5044
+    #   #   mode: host
+    #   # - target: 5190 # haproxy
+    #   #   published: 5190
+    #   #   mode: host
+    #   # - target: 9600 # general information about the Logstash
+    #   #   published: 9600
+    #   #   mode: host
+    #   #   protocol: tcp
+    #   - target: 5140 # firewall-1 (opnsense)
+    #     published: 5140
+    #     mode: host
+    #     protocol: udp
+    #   # - target: 5141
+    #   #   published: 5141 # firewall-2 (pfSense)
+    #   #   mode: host
+    #   #   protocol: udp
+    configs:
+      # - source: logstash_config
+      #   target: /usr/share/logstash/config/logstash.yml
+      #   mode: 777
+      - source: pipelines_config
+        target: /usr/share/logstash/config/pipelines.yml
+        mode: 0777
     volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      # - config:/usr/share/logstash/config
       - ./config/pfelk/conf.d/:/etc/pfelk/conf.d:ro
       - ./config/pfelk/patterns/:/etc/pfelk/patterns:ro
       - ./config/pfelk/databases/:/etc/pfelk/databases:ro
-    configs:
-      # - source: ls_logstash_config
-      #   target: /usr/share/logstash/config/logstash.yml
-      - source: ls_pipelines_config
-        target: /usr/share/logstash/config/pipelines.yml
     environment:
-      CONFIG_RELOAD_AUTOMATIC: ${LOGSTAST_RELOAD_AUTOMATIC:-true}
-      ES_JAVA_OPTS: -Xms${LOGSTAST_MEM_USE_GB:-2g} -Xmx${LOGSTAST_MEM_USE_GB:-2g}
-      ELASTICSEARCH_HOSTS: ${ELASTICSEARCH_PROTOCOL:-http}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
-      ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-elastic}
-      ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD}
-      XPACK_MONITORING_ELASTICSEARCH_HOSTS: ${ELASTICSEARCH_PROTOCOL:-http}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
-      XPACK_MONITORING_ELASTICSEARCH_URL: ${ELASTICSEARCH_PROTOCOL:-http}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
-      XPACK_MONITORING_ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-elastic}
-      XPACK_MONITORING_ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD}
-      xpack.monitoring.enabled: ${XPACK_MONITORING_ENABLED:-true}
-      xpack.monitoring.elasticsearch.hosts: ${ELASTICSEARCH_PROTOCOL:-http}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
-      xpack.monitoring.elasticsearch.username: ${ELASTICSEARCH_USERNAME:-elastic}
-      xpack.monitoring.elasticsearch.password: ${ELASTICSEARCH_PASSWORD}
+      LS_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-2g} -Xmx${ELK_MEM_USE_GB:-2g}
+      network.host: 0.0.0.0
 
+      CONFIG_RELOAD_AUTOMATIC: ${LOGSTAST_RELOAD_AUTOMATIC:-true}
+      ELASTICSEARCH_HOSTS: ${ELASTICSEARCH_PROTOCOL:-https}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
+      ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-logstash_system}
+      ELASTICSEARCH_SSL_VERIFICATIONMODE: ${ELASTICSEARCH_SSL_VERIFICATIONMODE:-none}
+      xpack.monitoring.enabled: ${XPACK_MONITORING_ENABLED:-true}
+      xpack.monitoring.elasticsearch.hosts: ${ELASTICSEARCH_PROTOCOL:-https}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
+      xpack.monitoring.elasticsearch.username: ${ELASTICSEARCH_USERNAME:-logstash_system}
     networks:
-      default: {}
-      elastic_default: {}
-    restart: unless-stopped
+      # default: {}
+      proxy: {}
+      elasticsearch: {}
+    restart: always
 
 ######################################################################################
 ######################################################################################
 ######################################################################################
 networks:
-  default:
-    driver: ${NETWORK_MODE:-bridge}
-  elastic_default:
-    external:
-      name: ${ELASTICSEARCH_NETWORK_NAME:-elastic_default}
+  # default:
+  #   driver: ${NETWORK_MODE:-bridge}
+  proxy:
+    external: true
+  elasticsearch:
+    name: ${ELASTICSEARCH_NETWORK_NAME:-elasticsearch}
+    external: true
+
+volumes:
+  config: {}
 
 configs:
-  # ls_logstash_config:
-  #   file: $PWD/config/logstash/config/logstash.yml
-  ls_pipelines_config:
-    file: $PWD/config/logstash/config/pipelines.yml
+  logstash_config:
+    file: $PWD/config/logstash.yml
+  pipelines_config:
+    file: $PWD/config/pipelines.yml

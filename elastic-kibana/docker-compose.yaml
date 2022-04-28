@@ -6,35 +6,58 @@ services:
   ######################################################################################
   ######################################################################################
   kibana:
-    image: docker.elastic.co/kibana/kibana:${ELASTICSEARCH_VERSION:-7.14.1}
+    image: docker.elastic.co/kibana/kibana:${VERSION:-8.1.3}
+    env_file: .env
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65535
+        hard: 65535
+      fsize: -1
+      as: -1
     deploy:
       mode: replicated
       replicas: 1
       placement:
         max_replicas_per_node: 1
         constraints:
-          # - "node.id==${NODE_ID}"
-          - "node.role==${NODE_ROLE}"
+          - "node.role==${NODE_ROLE:-manager}"
       restart_policy:
         condition: on-failure
-    ports:
-      - target: 5601
-        published: 5601
-        protocol: tcp
-        mode: host
+      labels:
+        - traefik.enable=true
+        - traefik.docker.lbswarm=true
+        - traefik.docker.network=proxy
+        - traefik.http.routers.kibana.entrypoints=https
+        - traefik.http.routers.kibana.rule=Host(`${DOMAIN?domain variable not set}`)
+        - traefik.http.routers.kibana.tls=true
+        - traefik.http.routers.kibana.service=kibana
+        - traefik.http.services.kibana.loadbalancer.server.scheme=${PROTOCOL:-https}
+        - traefik.http.services.kibana.loadbalancer.server.port=${PORT:-5601}
+        - traefik.http.routers.kibana.middlewares=${MIDDLEWARE_SECURED:-protected-secured@file}
+    # ports:
+    #   - target: 5601
+    #     published: ${PORT:-5601}
+    #     protocol: tcp
+    #     mode: host
     volumes:
       - kibana:/usr/share/kibana/data
+    configs:
+      - source: config_file
+        target: /usr/share/kibana/config/kibana.yml
+      - source: ssl_key
+        target: ${SERVER_SSL_KEY:-/usr/share/kibana/config/certs/kibana_node.key}
+      - source: ssl_certificate
+        target: ${SERVER_SSL_CERTIFICATE:-/usr/share/kibana/config/certs/kibana_node.crt}
     environment:
-      ES_JAVA_OPTS: -Xms${KIBANA_MEM_USE_GB:-1g} -Xmx${KIBANA_MEM_USE_GB:-1g}
-      ELASTICSEARCH_HOSTS: ${ELASTICSEARCH_PROTOCOL:-http}://${ELASTICSEARCH_HOST:-elasticsearch}:${ELASTICSEARCH_PORT:-9200}
-      ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-elastic}
-      ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD}
-      XPACK_SECURITY_ENABLED: ${ELASTICSEARCH_ACTIVATE_SECURITY:-true}
-      XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY: ${ELASTICSEARCH_ENC_KEY}
-      XPACK_FLEET_AGENTS_TLSCHECKDISABLED: ${ELASTICSEARCH_ACTIVATE_SECURITY:-true}
+      ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
+      network.host: 0.0.0.0
     networks:
       default: {}
-      elastic_default: {}
+      proxy: {}
+      elasticsearch: {}
     restart: always
 
 ######################################################################################
@@ -42,10 +65,22 @@ services:
 ######################################################################################
 networks:
   default:
+    name: kibana
     driver: ${NETWORK_MODE:-bridge}
-  elastic_default:
-    external:
-      name: ${ELASTICSEARCH_NETWORK_NAME:-elastic_default}
+    attachable: true
+  proxy:
+    external: true
+  elasticsearch:
+    name: ${ELASTICSEARCH_NETWORK_NAME:-elasticsearch}
+    external: true
 
 volumes:
   kibana: {}
+
+configs:
+  config_file:
+    file: $PWD/config/kibana.yml
+  ssl_key:
+    file: $PWD/config/ssl/kibana_node.key
+  ssl_certificate:
+    file: $PWD/config/ssl/kibana_node.crt

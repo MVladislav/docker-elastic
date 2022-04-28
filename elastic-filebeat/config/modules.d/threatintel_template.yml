@@ -1,0 +1,82 @@
+# Module: threatintel
+# Docs: https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-module-threatintel.html
+
+- module: threatintel
+  abuseurl:
+    enabled: true
+    var.input: httpjson
+    var.url: https://urlhaus-api.abuse.ch/v1/urls/recent/
+    var.interval: 10m
+
+  abusemalware:
+    enabled: true
+    var.input: httpjson
+    var.url: https://urlhaus-api.abuse.ch/v1/payloads/recent/
+    var.interval: 10m
+
+  malwarebazaar:
+    enabled: true
+    var.input: httpjson
+    var.url: https://mb-api.abuse.ch/api/v1/
+    var.interval: 10m
+
+  # ----------------------------------------------------------------------------
+
+  # misp:
+  #   enabled: true
+  #   var.input: httpjson
+  #   var.url: https://SERVER/events/restSearch
+  #   var.api_token: <TOKEN>
+  #   var.first_interval: 24h
+  #   var.interval: 60m
+
+  # # FREE ACCOUNT
+  # otx:
+  #   enabled: true
+  #   var.input: httpjson
+  #   var.url: https://otx.alienvault.com/api/v1/indicators/export
+  #   var.api_token: <TOKEN>
+  #   var.first_interval: 24h
+  #   var.lookback_range: 2h
+  #   var.interval: 60m
+
+  # ----------------------------------------------------------------------------
+
+  # anomali:
+  #   enabled: true
+  #   var.input: httpjson
+  #   var.url: https://limo.anomali.com/api/v1/taxii2/feeds/collections/41/objects?match[type]=indicator
+  #   var.username: <USERNAME>
+  #   var.password: <PASSWORD>
+  #   var.interval: 60m
+
+  # ----------------------------------------------------------------------------
+
+  # anomalithreatstream:
+  #   enabled: true
+  #   var.input: http_endpoint
+  #   var.listen_address: 0.0.0.0 # Listen on all interfaces.
+  #   var.listen_port: 8080
+  #   var.secret: "my secret"
+  #   var.ssl_certificate: path/to/server_ssl_cert.pem
+  #   var.ssl_key: path/to/ssl_key.pem
+
+  # recordedfuture:
+  #   enabled: true
+  #   var.input: httpjson
+  #   var.interval: 5m
+  #   var.first_interval: 168h
+  #   var.url: "https://api.recordedfuture.com/v2/ip/search?limit=200&fields=entity,timestamps,risk,intelCard,location&metadata=false"
+  #   var.api_token: "<RF_TOKEN>"
+
+  # threatq:
+  #   enabled: true
+  #   var.input: httpjson
+  #   var.host: https://testurl.threatq.com/
+  #   var.token_url: https://testurl.threatq.com/api/token
+  #   var.client_id: oauthclient
+  #   var.client_secret: 123abcd
+  #   var.interval: 1m
+  #   var.data_collection_id: "fsd2f54fsg2sf"
+
+  # ----------------------------------------------------------------------------

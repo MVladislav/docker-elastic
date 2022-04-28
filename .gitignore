@@ -1,37 +1,41 @@
 /*
+!.git
+!.github
 !.gitignore
+!.gitempty
+
 !.dockerignore
-!README.md
+!docker-*
+!Dockerfile
+
+!CHANGELOG.md
 !LICENCE
+!README.md
 
 # ---------------------
 
 !/elastic-agent/
-!/elastic-agent/.gitignore
-!/elastic-agent/.dockerignore
-!/elastic-agent/README.md
-!/elastic-agent/docker-compose.yaml
+
+# ---------------------
+
+!/elastic-apm/
+
+# ---------------------
+
+!/elastic-filebeat/
 
 # ---------------------
 
 !/elastic-kibana/
-!/elastic-kibana/.gitignore
-!/elastic-kibana/.dockerignore
-!/elastic-kibana/README.md
-!/elastic-kibana/docker-compose.yaml
 
 # ---------------------
 
 !/elastic-logstash/
-!/elastic-logstash/.gitignore
-!/elastic-logstash/.dockerignore
-!/elastic-logstash/README.md
-!/elastic-logstash/docker-compose.yaml
 
 # ---------------------
 
 !/elasticsearch/
-!/elasticsearch/.gitignore
-!/elasticsearch/.dockerignore
-!/elasticsearch/README.md
-!/elasticsearch/docker-compose.yaml
+
+# ---------------------
+
+!/services/
