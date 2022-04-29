@@ -9,11 +9,7 @@
 - [SETUP](#setup)
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
-    - [create/copy elasticsearch conf file [optional (not active in composer)]](#createcopy-elasticsearch-conf-file-optional-not-active-in-composer)
     - [create password file, for initial elastic password](#create-password-file-for-initial-elastic-password)
-    - [create ssl files](#create-ssl-files)
-  - [best practice start-up](#best-practice-start-up)
-  - [production](#production)
   - [References](#references)
 
 ---
@@ -72,14 +68,6 @@ XPACK_LICENSE_SELF_GENERATED_TYPE=basic # basic | trial
 ACTION_DESTRUCTIVE_REQUIRES_NAME=false
 ```
 
-### create/copy elasticsearch conf file [optional (not active in composer)]
-
-do not forget to edit it, with your settings
-
-```sh
-$cp config/elasticsearch_template.yml config/elasticsearch.yml
-```
-
 ### create password file, for initial elastic password
 
 example command to create it:
@@ -95,13 +83,9 @@ if something goes wrong you can reset it this way:
 > can also be used to set pw for user like 'kibana_system, logstash_system, ...'
 
 ```sh
-$docker exec -it elasticsearch /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
-```
-
-### create ssl files
-
-```sh
-$openssl genrsa -out config/ssl/elasticsearch_node.key 4096 && openssl req -new -x509 -sha256 -key config/ssl/elasticsearch_node.key -out config/ssl/elasticsearch_node.crt -days 365 -subj '/CN=elasticsearch'
+$docker exec -it "$(docker ps -q -f name=elasticsearch)" /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
+$docker exec -it "$(docker ps -q -f name=elasticsearch)" /usr/share/elasticsearch/bin/elasticsearch-reset-password -u kibana_system
+$docker exec -it "$(docker ps -q -f name=elasticsearch)" /usr/share/elasticsearch/bin/elasticsearch-reset-password -u logstash_system
 ```
 
 ---

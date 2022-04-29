@@ -15,6 +15,3 @@
 !config/
 config/*
 !config/*_template.yml
-!config/ssl/
-config/ssl/*
-!config/ssl/.gitempty

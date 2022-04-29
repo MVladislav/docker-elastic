@@ -16,7 +16,7 @@
 config/*
 
 !config/.gitempty
-!config/*_template.yml
+!config/*
 
 !config/pfelk/
 !config/pfelk/**
@@ -25,7 +25,3 @@ config/pfelk/databases/**
 config/pfelk/databases/rule-names.csv
 config/pfelk/conf.d/20-interfaces.pfelk
 config/pfelk/conf.d/30-geoip.pfelk
-
-!config/ssl/
-config/ssl/*
-!config/ssl/.gitempty

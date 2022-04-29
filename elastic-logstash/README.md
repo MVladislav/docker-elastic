@@ -9,8 +9,6 @@
 - [SETUP](#setup)
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
-    - [create/copy elasticsearch conf file [optional (not active in composer)]](#createcopy-elasticsearch-conf-file-optional-not-active-in-composer)
-  - [best practice start-up](#best-practice-start-up)
   - [References](#references)
 
 ---
@@ -48,15 +46,6 @@ ELASTICSEARCH_PASSWORD=<PASSWORD>
 ELASTICSEARCH_SSL_VERIFICATIONMODE=none
 
 ELASTICSEARCH_NETWORK_NAME=elasticsearch
-```
-
-### create/copy elasticsearch conf file
-
-do not forget to edit it, with your settings
-
-```sh
-$cp config/logstash_template.yml config/logstash.yml
-$cp config/pipelines_template.yml config/pipelines.yml
 ```
 
 ---

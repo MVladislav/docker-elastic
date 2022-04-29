@@ -9,8 +9,7 @@
 - [SETUP](#setup)
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
-    - [create/copy filebeat conf file](#createcopy-filebeat-conf-file)
-  - [best practice start-up](#best-practice-start-up)
+  - [create index/dasboards/pipelines](#create-indexdasboardspipelines)
   - [References](#references)
 
 ---
@@ -50,20 +49,12 @@ ELASTICSEARCH_NETWORK_NAME=elasticsearch
 KIBANA_NETWORK_NAME=kibana
 ```
 
-### create/copy filebeat conf file
-
-> do not forget to edit it, with your settings
-
-```sh
-$cp config/filebeat_template.yml config/filebeat.yml
-```
-
 ## create index/dasboards/pipelines
 
 > after filbeat stats, you can run:
 
 ```sh
-$docker exec <CONTAINER> filebeat setup -e
+$docker exec "$(docker ps -q -f name=filebeat)" filebeat setup -e
 ```
 
 ---

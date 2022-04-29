@@ -10,10 +10,10 @@
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
     - [create/copy kibana conf file](#createcopy-kibana-conf-file)
-    - [create ssl files](#create-ssl-files)
   - [dashboard](#dashboard)
+    - [add missing `@timestamp` or any other times](#add-missing-timestamp-or-any-other-times)
+    - [add missing `event.category`](#add-missing-eventcategory)
     - [index patter](#index-patter)
-  - [best practice start-up](#best-practice-start-up)
   - [Dahboard Examples](#dahboard-examples)
   - [References](#references)
 
@@ -57,16 +57,10 @@ ELASTICSEARCH_NETWORK_NAME=elasticsearch
 
 ### create/copy kibana conf file
 
-do not forget to edit it, with your settings
+> do not forget to edit it, with your settings
 
 ```sh
 $cp config/kibana_template.yml config/kibana.yml
-```
-
-### create ssl files
-
-```sh
-$openssl genrsa -out config/kibana_node.pem 4096 && openssl req -new -x509 -sha256 -key config/ssl/kibana_node_key.pem -out config/ssl/kibana_node.pem -days 365 -subj '/CN=kibana'
 ```
 
 ---

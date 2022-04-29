@@ -9,8 +9,6 @@
 - [SETUP](#setup)
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
-    - [create/copy apm conf file](#createcopy-apm-conf-file)
-  - [best practice start-up](#best-practice-start-up)
   - [References](#references)
 
 ---
@@ -54,14 +52,6 @@ SSL_VERIFICATION_MODE=none
 
 ELASTICSEARCH_NETWORK_NAME=elasticsearch
 KIBANA_NETWORK_NAME=kibana
-```
-
-### create/copy apm conf file
-
-> do not forget to edit it, with your settings
-
-```sh
-$cp config/apm-server_template.yml config/apm-server.yml
 ```
 
 ---

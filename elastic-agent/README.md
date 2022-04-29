@@ -9,13 +9,14 @@
 - [SETUP](#setup)
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
+  - [commands](#commands)
+    - [reload dashboard](#reload-dashboard)
   - [endpoint protection - client setup](#endpoint-protection---client-setup)
     - [install](#install)
     - [enroll and run:](#enroll-and-run)
     - [alternative](#alternative)
       - [install](#install-1)
       - [enroll and run:](#enroll-and-run-1)
-  - [best practice start-up](#best-practice-start-up)
   - [References](#references)
 
 ---
@@ -68,14 +69,6 @@ FLEET_SERVER_POLICY=<POLICY>
 FLEET_SERVER_INSECURE_HTTP=false
 
 ELASTICSEARCH_NETWORK_NAME=elasticsearch
-```
-
-### create/copy elastic-agent conf file
-
-> do not forget to edit it, with your settings
-
-```sh
-$cp config/elastic-agent_template.yml config/elastic-agent.yml
 ```
 
 ---
