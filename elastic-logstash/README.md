@@ -30,6 +30,8 @@ VERSION=8.1.3
 
 # DOMAIN=logstash.home.local
 PORT_OPNSENSE=5140
+# default-secured@file | protected-secured@file | admin-secured@file
+MIDDLEWARE_SECURED=default-secured@file
 
 ELK_MEM_USE_GB=1g
 

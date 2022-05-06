@@ -38,6 +38,7 @@ services:
         - traefik.tcp.routers.logstash-opnsense.tls.passthrough=false
         - traefik.tcp.routers.logstash-opnsense.service=logstash-opnsense
         - traefik.tcp.services.logstash-opnsense.loadbalancer.server.port=${PORT_OPNSENSE:-5140}
+        - traefik.tcp.routers.logstash-opnsense.middlewares=${MIDDLEWARE_SECURED:-default-secured@file}
     # ports:
     #   # - target: 5040 # suricata
     #   #   published: 5040
