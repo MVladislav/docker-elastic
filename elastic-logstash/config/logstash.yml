@@ -9,14 +9,9 @@
 http.host: "0.0.0.0"
 #path.config: /usr/share/logstash/pipeline/pipelines.yml
 
+pipeline.batch.size: 500
 config.reload.automatic: ${LOGSTAST_RELOAD_AUTOMATIC:true}
-elasticsearch.hosts:
-  [
-    "${ELASTICSEARCH_PROTOCOL:https}://${ELASTICSEARCH_HOST:elasticsearch}:${ELASTICSEARCH_PORT:9200}",
-  ]
-elasticsearch.username: ${ELASTICSEARCH_USERNAME:logstash_system}
-elasticsearch.password: ${ELASTICSEARCH_PASSWORD:}
-elasticsearch.ssl.verificationmode: ${ELASTICSEARCH_SSL_VERIFICATIONMODE:none}
+config.reload.interval: 60s
 
 xpack.monitoring.enabled: ${XPACK_MONITORING_ENABLED:true}
 xpack.monitoring.elasticsearch.hosts: ${ELASTICSEARCH_PROTOCOL:https}://${ELASTICSEARCH_HOST:elasticsearch}:${ELASTICSEARCH_PORT:9200}
