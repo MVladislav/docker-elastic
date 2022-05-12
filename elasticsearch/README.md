@@ -25,7 +25,7 @@ NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-VERSION=8.1.3
+VERSION=8.2.0
 
 DOMAIN=elastic.home.local
 PROTOCOL=http
@@ -33,12 +33,14 @@ PORT=9200
 # default-secured@file | protected-secured@file | admin-secured@file
 MIDDLEWARE_SECURED=default-secured@file
 
-ELK_MEM_USE_GB=3g
+ELK_MEM_USE_GB=2g
 
 ELASTIC_PASSWORD_FILE=/run/secrets/bootstrapPassword.txt
+# ELASTIC_PASSWORD=
+
 NETWORK_HOST=0.0.0.0
 DISCOVERY_TYPE=single-node
-NODE_NAME=elasticsearch-docker-default-1
+NODE_NAME=elasticsearch-docker-home-01
 CLUSTER_NAME=elasticsearch-docker-cluster
 
 BOOTSTRAP_MEMORY_LOCK=true
@@ -52,17 +54,12 @@ XPACK_SECURITY_AUTHC_REALMS_FILE_FILE1_ORDER=0
 XPACK_SECURITY_AUTHC_REALMS_NATIVE_NATIVE1_ORDER=1
 XPACK_SECURITY_AUTHC_API_KEY_ENABLED=true
 
-XPACK_SECURITY_TRANSPORT_SSL_ENABLED=true
-XPACK_SECURITY_HTTP_SSL_ENABLED=true
+XPACK_SECURITY_TRANSPORT_SSL_ENABLED=false
+XPACK_SECURITY_HTTP_SSL_ENABLED=false
 
-XPACK_SECURITY_HTTP_SSL_KEY=certs/elasticsearch_node.key
-XPACK_SECURITY_HTTP_SSL_CERTIFICATE=certs/elasticsearch_node.crt
-XPACK_SECURITY_TRANSPORT_SSL_KEY=certs/elasticsearch_node.key
-XPACK_SECURITY_TRANSPORT_SSL_CERTIFICATE=certs/elasticsearch_node.crt
-
-XPACK_HTTP_SSL_VERIFICATION_MODE=certificate # certificate | none
-XPACK_SECURITY_HTTP_SSL_VERIFICATION_MODE=certificate # certificate | none
-XPACK_SECURITY_TRANSPORT_SSL_VERIFICATION_MODE=certificate # certificate | none
+XPACK_HTTP_SSL_VERIFICATION_MODE=none # certificate | none
+XPACK_SECURITY_HTTP_SSL_VERIFICATION_MODE=none # certificate | none
+XPACK_SECURITY_TRANSPORT_SSL_VERIFICATION_MODE=none # certificate | none
 
 XPACK_LICENSE_SELF_GENERATED_TYPE=basic # basic | trial
 ACTION_DESTRUCTIVE_REQUIRES_NAME=false

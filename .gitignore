@@ -1,12 +1,14 @@
-/*
-!.git
-!.github
+*
+!.git/
+!.git/**
+!.github/
+!.github/**
 !.gitignore
 !.gitempty
 
-!.dockerignore
-!docker-*
-!Dockerfile
+# !.dockerignore
+# !docker-*
+# !Dockerfile
 
 !CHANGELOG.md
 !LICENCE

@@ -34,7 +34,7 @@ NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-VERSION=8.1.3
+VERSION=8.2.0
 
 DOMAIN_AGENT=agent.home.local
 PROTOCOL_AGENT=http
