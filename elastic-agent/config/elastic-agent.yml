@@ -6,7 +6,7 @@ outputs:
     type: elasticsearch
     hosts: '${ELASTICSEARCH_PROTOCOL:https}://${ELASTICSEARCH_HOST:elasticsearch}:${ELASTICSEARCH_PORT:9200}'
     username: '${ELASTICSEARCH_USERNAME:elastic}'
-    password: '${ELASTICSEARCH_PASSWORD:}'
+    password: '${ELASTICSEARCH_PASSWORD}'
 
 inputs:
   - type: system/metrics
@@ -44,7 +44,7 @@ fleet:
     # optional values
     protocol: "${KIBANA_PROTOCOL:https}"
     username: "${KIBANA_USERNAME:elastic}"
-    password: "${KIBANA_PASSWORD:}"
+    password: "${KIBANA_PASSWORD}"
     #path: ""
     ssl.verification_mode: ${SSL_VERIFICATION_MODE:full}
     #ssl.supported_protocols: [TLSv1.0, TLSv1.1, TLSv1.2]

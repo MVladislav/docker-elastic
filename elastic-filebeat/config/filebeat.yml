@@ -114,7 +114,7 @@ setup.kibana:
   # Authentication credentials - either API key or username/password.
   #api_key: "id:api_key"
   username: "${KIBANA_USERNAME:elastic}"
-  password: "${KIBANA_PASSWORD:}"
+  password: "${KIBANA_PASSWORD}"
 
   ssl.verification_mode: ${SSL_VERIFICATION_MODE:full}
 
@@ -146,7 +146,7 @@ output.elasticsearch:
   # Authentication credentials - either API key or username/password.
   #api_key: "id:api_key"
   username: "${ELASTICSEARCH_USERNAME:elastic}"
-  password: "${ELASTICSEARCH_PASSWORD:}"
+  password: "${ELASTICSEARCH_PASSWORD}"
 
   ssl.verification_mode: ${SSL_VERIFICATION_MODE:full}
 

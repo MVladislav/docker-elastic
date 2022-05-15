@@ -181,14 +181,19 @@ apm-server:
     # In case you specify and additional path, the scheme is required: `http://localhost:9200/path`.
     # IPv6 addresses should always be defined as: `https://[2001:db8::1]:9200`.
     # hosts: ["localhost:9200"]
+    hosts: ["${ELASTICSEARCH_HOST:elasticsearch}:${ELASTICSEARCH_PORT:9200}"]
 
     # Protocol - either `http` (default) or `https`.
     #protocol: "https"
+    protocol: "${ELASTICSEARCH_PROTOCOL:https}"
 
     # Authentication credentials - either API key or username/password.
     #api_key: "id:api_key"
     #username: "elastic"
     #password: "changeme"
+    username: "${ELASTICSEARCH_USERNAME:elastic}"
+    password: "${ELASTICSEARCH_PASSWORD}"
+
 
     # Index pattern in which to search for source maps, when fetching source maps from Elasticsearch.
     #index_pattern: "apm-*-sourcemap*"
@@ -211,7 +216,7 @@ apm-server:
     # Optional protocol and basic auth credentials.
     protocol: "${KIBANA_PROTOCOL:https}"
     username: "${KIBANA_USERNAME:elastic}"
-    password: "${KIBANA_PASSWORD:}"
+    password: "${KIBANA_PASSWORD}"
 
     # Optional HTTP path.
     #path: ""
@@ -324,7 +329,7 @@ output.elasticsearch:
   # Authentication credentials - either API key or username/password.
   #api_key: "id:api_key"
   username: "${ELASTICSEARCH_USERNAME:elastic}"
-  password: "${ELASTICSEARCH_PASSWORD:}"
+  password: "${ELASTICSEARCH_PASSWORD}"
 
   # Dictionary of HTTP parameters to pass within the url with index operations.
   #parameters:

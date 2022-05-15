@@ -9,6 +9,7 @@
 - [SETUP](#setup)
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
+  - [elastic setup](#elastic-setup)
   - [References](#references)
 
 ---
@@ -53,6 +54,11 @@ SSL_VERIFICATION_MODE=none
 ELASTICSEARCH_NETWORK_NAME=elasticsearch
 KIBANA_NETWORK_NAME=kibana
 ```
+
+## elastic setup
+
+you need to go in kibana under `Management > Integration > Elastic APM`
+and add the agent to elastic, else this service will not connect with elastic.
 
 ---
 
