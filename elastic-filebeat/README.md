@@ -51,10 +51,12 @@ KIBANA_NETWORK_NAME=kibana
 
 ## create index/dasboards/pipelines
 
-> after filbeat stats, you can run:
+> after filebeat stats, you can run:
+>
+> _many useless dashboard wiil be installed_
 
 ```sh
-$docker exec "$(docker ps -q -f name=filebeat)" filebeat setup -e
+$docker exec "$(docker ps -q -f name=filebeat)" filebeat setup --dashboards -e
 ```
 
 ---

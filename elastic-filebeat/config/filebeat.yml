@@ -17,6 +17,15 @@ filebeat.inputs:
   # you can use different inputs for various configurations.
   # Below are the input specific configurations.
 
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/syslog
+    fields_under_root: true
+    fields:
+      data_type: "syslog"
+    include_lines: ['^ERR', '^WARN']
+
   # filestream is an input for collecting log messages from files.
   - type: filestream
 
@@ -45,6 +54,15 @@ filebeat.inputs:
     #fields:
     #  level: debug
     #  review: 1
+
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      hints.enabled: true
+      # hints.default_config:
+      #   type: container
+      #   paths:
+      #     - /var/lib/docker/containers/*/*.log  # CRI path
 
 # ============================== Filebeat modules ==============================
 
@@ -84,7 +102,7 @@ setup.template.settings:
 # These settings control loading the sample dashboards to the Kibana index. Loading
 # the dashboards is disabled by default and can be enabled either by setting the
 # options here or by using the `setup` command.
-#setup.dashboards.enabled: false
+setup.dashboards.enabled: false
 
 # The URL from where to download the dashboards archive. By default this URL
 # has a value which is computed based on the Beat name and version. For released
@@ -150,6 +168,18 @@ output.elasticsearch:
 
   ssl.verification_mode: ${SSL_VERIFICATION_MODE:full}
 
+  # index: "logs-filebeat-%{[agent.version]}-%{+yyyy.MM.dd}-%{index_num}"
+  indices:
+    - index: "logs-filebeat-elastic-%{[agent.version]}-%{+yyyy.MM.dd}"
+      when.or:
+        - contains:
+            container.image.name: docker.elastic.co/
+    - index: "logs-filebeat-threat-%{[agent.version]}-%{+yyyy.MM.dd}"
+      when.or:
+        - equals:
+            event.category: "threat"
+    - index: "logs-filebeat-apps-%{[agent.version]}-%{+yyyy.MM.dd}"
+
 # ------------------------------ Logstash Output -------------------------------
 #output.logstash:
 # The Logstash hosts
@@ -167,7 +197,7 @@ output.elasticsearch:
 
 # ================================= Processors =================================
 processors:
-  - add_cloud_metadata: ~
+  # - add_cloud_metadata: ~
   - add_docker_metadata: ~
 # ================================== Logging ===================================
 
