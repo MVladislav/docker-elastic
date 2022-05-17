@@ -69,19 +69,19 @@ ELASTICSEARCH_NETWORK_NAME=elasticsearch
 # --------------------------- Windows Logs To Collect --------------------------
 winlogbeat.event_logs:
   - name: Application
-    ignore_older: 30m
+    ignore_older: 72h
   - name: Security
-    ignore_older: 30m
+    ignore_older: 72h
   - name: System
-    ignore_older: 30m
+    ignore_older: 72h
   - name: Microsoft-windows-sysmon/operational
-    ignore_older: 30m
+    ignore_older: 72h
   - name: Microsoft-Windows-PowerShell/Operational
     event_id: 4103, 4104, 4105, 4106
-    ignore_older: 30m
+    ignore_older: 72h
   - name: Windows PowerShell
     event_id: 400, 403, 600, 800
-    ignore_older: 30m
+    ignore_older: 72h
   - name: Microsoft-Windows-WMI-Activity/Operational
     event_id: 5857,5858,5859,5860,5861
 
