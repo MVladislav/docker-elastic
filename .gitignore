@@ -3,12 +3,14 @@
 !.git/**
 !.github/
 !.github/**
+!.vscode/
+!.vscode/**
 !.gitignore
 !.gitempty
 
-# !.dockerignore
-# !docker-*
-# !Dockerfile
+!.dockerignore
+!docker-*
+!Dockerfile
 
 !CHANGELOG.md
 !LICENCE

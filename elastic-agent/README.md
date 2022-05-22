@@ -10,6 +10,7 @@
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
   - [commands](#commands)
+    - [create ca-fingerprint](#create-ca-fingerprint)
     - [reload dashboard](#reload-dashboard)
   - [endpoint protection - client setup](#endpoint-protection---client-setup)
     - [install](#install)
@@ -36,9 +37,9 @@ NETWORK_MODE=overlay
 
 VERSION=8.2.0
 
-DOMAIN_AGENT=agent.home.local
-PROTOCOL_AGENT=http
-PORT_AGENT=8220
+DOMAIN=agent.home.local
+PROTOCOL=http
+PORT=8220
 # default-secured@file | protected-secured@file | admin-secured@file
 MIDDLEWARE_SECURED=default-secured@file
 
@@ -74,6 +75,12 @@ ELASTICSEARCH_NETWORK_NAME=elasticsearch
 ---
 
 ## commands
+
+### create ca-fingerprint
+
+```sh
+$openssl x509 -noout -fingerprint -sha256 -in ca.crt | cut -d "=" -f 2 | base64 -w0 
+```
 
 ### reload dashboard
 

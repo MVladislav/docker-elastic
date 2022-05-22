@@ -10,6 +10,7 @@
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
     - [create password file, for initial elastic password](#create-password-file-for-initial-elastic-password)
+  - [Other commands](#other-commands)
   - [References](#references)
 
 ---
@@ -87,9 +88,26 @@ $docker exec -it "$(docker ps -q -f name=elasticsearch)" /usr/share/elasticsearc
 
 ---
 
+## Other commands
+
+delete all:
+
+```sh
+$curl -XDELETE ELASTICSEARCHIP:9200/*
+```
+
+delete all-indices:
+
+```sh
+$curl -XDELETE ELASTICSEARCHIP:9200/indices
+```
+
+---
+
 ## References
 
 - <https://www.elastic.co/downloads/elasticsearch>
 - <https://www.docker.elastic.co/r/elasticsearch/elasticsearch>
 - <https://github.com/shazChaudhry/docker-elastic>
 - <https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html>
+- <https://www.elastic.co/guide/en/elasticsearch/client/curator/5.x/pip.html>
