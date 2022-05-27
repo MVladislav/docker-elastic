@@ -50,6 +50,7 @@ services:
     environment:
       ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
       network.host: 0.0.0.0
+      NODE_OPTIONS: "--max-old-space-size=1800"
     networks:
       default: {}
       proxy: {}

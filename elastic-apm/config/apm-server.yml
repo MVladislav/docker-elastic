@@ -194,7 +194,6 @@ apm-server:
     username: "${ELASTICSEARCH_USERNAME:elastic}"
     password: "${ELASTICSEARCH_PASSWORD}"
 
-
     # Index pattern in which to search for source maps, when fetching source maps from Elasticsearch.
     #index_pattern: "apm-*-sourcemap*"
 
@@ -330,6 +329,9 @@ output.elasticsearch:
   #api_key: "id:api_key"
   username: "${ELASTICSEARCH_USERNAME:elastic}"
   password: "${ELASTICSEARCH_PASSWORD}"
+
+  indices:
+    - index: "traces-apm-%{[agent.version]}-%{+yyyy.MM.dd}"
 
   # Dictionary of HTTP parameters to pass within the url with index operations.
   #parameters:

@@ -12,5 +12,5 @@
     # - pressure
     # - rapl
   enabled: true
-  #hostfs: /hostfs
+  hostfs: /hostfs
   #rapl.use_msr_safe: false

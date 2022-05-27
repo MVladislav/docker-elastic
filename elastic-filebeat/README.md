@@ -29,6 +29,8 @@ VERSION=8.2.0
 
 ELK_MEM_USE_GB=1g
 
+PORT_NETLFOW=2055
+
 ELASTICSEARCH_PROTOCOL=http
 ELASTICSEARCH_HOST=elasticsearch
 ELASTICSEARCH_PORT=9200
@@ -68,3 +70,4 @@ $docker exec "$(docker ps -q -f name=filebeat)" filebeat setup --dashboards -e
 - <https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-module-threatintel.html>
 - <https://www.elastic.co/blog/ingesting-threat-data-with-threat-intel-filebeat-module>
 - <https://www.sarulabs.com/post/5/2019-08-12/sending-docker-logs-to-elasticsearch-and-kibana-with-filebeat.html>
+- <https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-module-netflow.html>

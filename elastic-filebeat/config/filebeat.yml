@@ -24,7 +24,7 @@ filebeat.inputs:
     fields_under_root: true
     fields:
       data_type: "syslog"
-    include_lines: ['^ERR', '^WARN']
+    include_lines: ["^ERR", "^WARN"]
 
   # filestream is an input for collecting log messages from files.
   - type: filestream
@@ -176,8 +176,12 @@ output.elasticsearch:
             container.image.name: docker.elastic.co/
     - index: "logs-filebeat-threat-%{[agent.version]}-%{+yyyy.MM.dd}"
       when.or:
-        - equals:
+        - contains:
             event.category: "threat"
+    - index: "logs-filebeat-netflow-%{[agent.version]}-%{+yyyy.MM.dd}"
+      when.or:
+        - contains:
+            event.category: "network"
     - index: "logs-filebeat-apps-%{[agent.version]}-%{+yyyy.MM.dd}"
 
 # ------------------------------ Logstash Output -------------------------------
@@ -199,6 +203,12 @@ output.elasticsearch:
 processors:
   # - add_cloud_metadata: ~
   - add_docker_metadata: ~
+  - decode_json_fields:
+      fields: ["message"]
+      process_array: false
+      max_depth: 1
+      target: ""
+      overwrite_keys: false
 # ================================== Logging ===================================
 
 # Sets log level. The default log level is info.
