@@ -11,3 +11,4 @@
 !config/
 config/*
 !config/*_template.yml
+!config/elastic-certificates.p12
