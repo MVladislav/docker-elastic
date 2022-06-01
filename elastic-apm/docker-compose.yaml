@@ -33,17 +33,17 @@ services:
           - "node.role==${NODE_ROLE:-manager}"
       restart_policy:
         condition: on-failure
-      labels:
-        - traefik.enable=true
-        - traefik.docker.lbswarm=true
-        - traefik.docker.network=proxy
-        - traefik.http.routers.apm.entrypoints=https
-        - traefik.http.routers.apm.rule=Host(`${DOMAIN?domain variable not set}`)
-        - traefik.http.routers.apm.tls=true
-        - traefik.http.routers.apm.service=apm
-        - traefik.http.services.apm.loadbalancer.server.scheme=${PROTOCOL:-http}
-        - traefik.http.services.apm.loadbalancer.server.port=${PORT:-8200}
-        - traefik.http.routers.apm.middlewares=${MIDDLEWARE_SECURED:-default-secured@file}
+      # labels:
+      #   - traefik.enable=true
+      #   - traefik.docker.lbswarm=true
+      #   - traefik.docker.network=proxy
+      #   - traefik.http.routers.apm.entrypoints=https
+      #   - traefik.http.routers.apm.rule=Host(`${DOMAIN?domain variable not set}`)
+      #   - traefik.http.routers.apm.tls=true
+      #   - traefik.http.routers.apm.service=apm
+      #   - traefik.http.services.apm.loadbalancer.server.scheme=${PROTOCOL:-http}
+      #   - traefik.http.services.apm.loadbalancer.server.port=${PORT:-8200}
+      #   - traefik.http.routers.apm.middlewares=${MIDDLEWARE_SECURED:-default-secured@file}
     # ports:
     #   - target: 8200
     #     published: ${PORT:-8200}
@@ -77,7 +77,7 @@ services:
     healthcheck:
       interval: 10s
       retries: 12
-      test: curl --write-out 'HTTP %{http_code}' -k --fail --silent --output /dev/null ${PROTOCOL:-http}://localhost:8200/
+      test: curl --write-out 'HTTP %{http_code}' -k --fail --silent --output /dev/null ${PROTOCOL:-http}://localhost:${PORT:-8200}/
 
 ################################################################################
 ################################################################################
@@ -94,7 +94,7 @@ networks:
   kibana:
     name: ${KIBANA_NETWORK_NAME:-kibana}
     external: true
-#
+
 configs:
   apm_config:
     file: $PWD/config/apm-server.yml

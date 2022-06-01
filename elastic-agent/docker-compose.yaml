@@ -40,9 +40,17 @@ services:
         - traefik.http.services.elastic-agent.loadbalancer.server.scheme=${PROTOCOL:-http}
         - traefik.http.services.elastic-agent.loadbalancer.server.port=${PORT:-8220}
         - traefik.http.routers.elastic-agent.middlewares=${MIDDLEWARE_SECURED:-default-secured@file}
+
+        - traefik.udp.routers.agent-netflow.entrypoints=netflow
+        - traefik.udp.routers.agent-netflow.service=agent-netflow
+        - traefik.udp.services.agent-netflow.loadbalancer.server.port=${PORT_NETLFOW:-2055}
     # ports:
     #   - target: 8220
     #     published: 8220
+    #     mode: host
+    #   - target: 2055
+    #     published: 2055
+    #     protocol: udü
     #     mode: host
     configs:
       - source: agent_config

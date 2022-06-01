@@ -36,6 +36,7 @@
             system:
               filesystem:
                 mount_point: ^/(sys|cgroup|proc|dev|etc|host|lib)($|/)
+  hostfs: "/hostfs"
 
 - module: system
   period: 15m

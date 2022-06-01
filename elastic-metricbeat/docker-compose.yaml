@@ -44,9 +44,9 @@ services:
       - source: m_linux_config
         target: /usr/share/metricbeat/modules.d/linux.yml
         mode: 0440
-      # - source: m_system_config
-      #   target: /usr/share/metricbeat/modules.d/system.yml
-      #   mode: 0440
+      - source: m_system_config
+        target: /usr/share/metricbeat/modules.d/system.yml
+        mode: 0440
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro

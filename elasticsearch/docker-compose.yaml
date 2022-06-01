@@ -118,8 +118,6 @@ volumes:
   elasticsearch: {}
 
 configs:
-  # config_file:
-  #   file: $PWD/config/elasticsearch.yml
   pw_file:
     file: $PWD/config/bootstrapPassword.txt
   elk_cert_file:

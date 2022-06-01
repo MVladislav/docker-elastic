@@ -16,4 +16,5 @@ config/*
 !config/modules.d/
 config/modules.d/*
 !config/modules.d/.gitempty
+!config/modules.d/netflow.yml
 !config/modules.d/*_template.*

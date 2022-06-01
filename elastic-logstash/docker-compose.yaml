@@ -31,7 +31,7 @@ services:
         - traefik.docker.lbswarm=true
         - traefik.docker.network=proxy
 
-        - traefik.tcp.routers.logstash-opnsense.entrypoints=opnsense
+        - traefik.tcp.routers.logstash-opnsense.entrypoints=syslog
         - traefik.tcp.routers.logstash-opnsense.rule=HostSNI(`*`)
         - traefik.tcp.routers.logstash-opnsense.tls=false
         - traefik.tcp.routers.logstash-opnsense.tls.passthrough=false
@@ -39,7 +39,7 @@ services:
         - traefik.tcp.services.logstash-opnsense.loadbalancer.server.port=${PORT_OPNSENSE:-5140}
         - traefik.tcp.routers.logstash-opnsense.middlewares=${MIDDLEWARE_SECURED:-default-whitelist@file}
 
-        - traefik.tcp.routers.logstash-beats.entrypoints=beats
+        - traefik.tcp.routers.logstash-beats.entrypoints=logstash-beats
         - traefik.tcp.routers.logstash-beats.rule=HostSNI(`*`)
         - traefik.tcp.routers.logstash-beats.tls=false
         - traefik.tcp.routers.logstash-beats.tls.passthrough=false
