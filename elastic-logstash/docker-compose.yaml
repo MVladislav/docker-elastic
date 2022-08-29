@@ -31,7 +31,7 @@ services:
         - traefik.docker.lbswarm=true
         - traefik.docker.network=proxy
 
-        - traefik.tcp.routers.logstash-opnsense.entrypoints=syslog
+        - traefik.tcp.routers.logstash-opnsense.entrypoints=syslog-opnsense
         - traefik.tcp.routers.logstash-opnsense.rule=HostSNI(`*`)
         - traefik.tcp.routers.logstash-opnsense.tls=false
         - traefik.tcp.routers.logstash-opnsense.tls.passthrough=false
@@ -39,13 +39,26 @@ services:
         - traefik.tcp.services.logstash-opnsense.loadbalancer.server.port=${PORT_OPNSENSE:-5140}
         - traefik.tcp.routers.logstash-opnsense.middlewares=${MIDDLEWARE_SECURED:-default-whitelist@file}
 
-        - traefik.tcp.routers.logstash-beats.entrypoints=logstash-beats
+        # sysmon
+        - traefik.tcp.routers.logstash-beats.entrypoints=elastic-beats
         - traefik.tcp.routers.logstash-beats.rule=HostSNI(`*`)
         - traefik.tcp.routers.logstash-beats.tls=false
         - traefik.tcp.routers.logstash-beats.tls.passthrough=false
         - traefik.tcp.routers.logstash-beats.service=logstash-beats
         - traefik.tcp.services.logstash-beats.loadbalancer.server.port=${PORT_BEATS:-5044}
         - traefik.tcp.routers.logstash-beats.middlewares=${MIDDLEWARE_SECURED:-default-whitelist@file}
+
+        # - traefik.tcp.routers.logstash-unifi.entrypoints=syslog-unifi
+        # - traefik.tcp.routers.logstash-unifi.rule=HostSNI(`*`)
+        # - traefik.tcp.routers.logstash-unifi.tls=false
+        # - traefik.tcp.routers.logstash-unifi.tls.passthrough=false
+        # - traefik.tcp.routers.logstash-unifi.service=logstash-unifi
+        # - traefik.tcp.services.logstash-unifi.loadbalancer.server.port=${PORT_UNIFI:-5145}
+        # - traefik.tcp.routers.logstash-unifi.middlewares=${MIDDLEWARE_SECURED:-default-whitelist@file}
+
+        - traefik.udp.routers.logstash-unifi.entrypoints=syslog-unifi
+        - traefik.udp.routers.logstash-unifi.service=logstash-unifi
+        - traefik.udp.services.logstash-unifi.loadbalancer.server.port=${PORT_UNIFI:-5145}
     # ports:
     #   # - target: 5040 # suricata
     #   #   published: 5040
@@ -86,6 +99,8 @@ services:
 
       - ./config/sysmon/conf.d/:/etc/sysmon/conf.d:ro
       - ./config/sysmon/enrichments/cti:/etc/sysmon/cti:ro
+
+      - ./config/unifi/conf.d/:/etc/unifi/conf.d:ro
     environment:
       LS_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-2g} -Xmx${ELK_MEM_USE_GB:-2g}
       network.host: 0.0.0.0

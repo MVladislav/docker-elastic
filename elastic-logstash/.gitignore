@@ -24,3 +24,6 @@ config/pfelk/conf.d/30-geoip.pfelk
 
 !config/sysmon/
 !config/sysmon/**
+
+!config/unifi/
+!config/unifi/**

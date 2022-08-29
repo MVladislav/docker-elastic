@@ -33,6 +33,7 @@ VERSION=8.2.0
 # DOMAIN=logstash.home.local
 PORT_OPNSENSE=5140
 PORT_BEATS=5044
+PORT_UNIFI=5145
 # default-whitelist@file | protected-whitelist@file | admin-whitelist@file
 MIDDLEWARE_SECURED=default-whitelist@file
 

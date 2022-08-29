@@ -12,8 +12,13 @@
 - pipeline.id: pfelk
   path.config: "/etc/pfelk/conf.d/*.pfelk"
   pipeline.ecs_compatibility: v8 #Disable if not running Elastic v8+
+
 - pipeline.id: sysmon
   path.config: "/etc/sysmon/conf.d/*.conf"
+  pipeline.ecs_compatibility: v8 #Disable if not running Elastic v8+
+
+- pipeline.id: unifi
+  path.config: "/etc/unifi/conf.d/*.conf"
   pipeline.ecs_compatibility: v8 #Disable if not running Elastic v8+
 
 # https://github.com/elastic/logstash/blob/main/config/pipelines.yml
