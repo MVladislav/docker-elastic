@@ -91,13 +91,19 @@ $docker exec -it "$(docker ps -q -f name=elasticsearch)" /usr/share/elasticsearc
 delete all:
 
 ```sh
-$curl -XDELETE ELASTICSEARCHIP:9200/*
+$curl -u 'USERNAME:PASSWORD' -XDELETE ELASTICSEARCHIP:9200/*
 ```
 
 delete all-indices:
 
 ```sh
-$curl -XDELETE ELASTICSEARCHIP:9200/indices
+$curl -u 'USERNAME:PASSWORD' -XDELETE ELASTICSEARCHIP:9200/indices
+```
+
+get all indices with size:
+
+```sh
+$curl -u 'USERNAME:PASSWORD' -XGET  localhost:9200/_cat/indices?v
 ```
 
 ---

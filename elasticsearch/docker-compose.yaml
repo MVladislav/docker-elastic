@@ -94,6 +94,9 @@ services:
 
       xpack.license.self_generated.type: ${XPACK_LICENSE_SELF_GENERATED_TYPE:-basic}
       action.destructive_requires_name: ${ACTION_DESTRUCTIVE_REQUIRES_NAME:-false}
+
+      http.cors.enabled: ${HTTP_CORS_ENABLED:-true}
+      http.cors.allow-origin: ${HTTP_CORS_ALLOW-ORIGIN:-*}
     networks:
       default: {}
       proxy: {}
