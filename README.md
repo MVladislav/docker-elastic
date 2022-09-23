@@ -8,16 +8,26 @@
 
 - [Elastic - SIEM - Docker - Deploy](#elastic---siem---docker---deploy)
   - [about](#about)
+  - [info to run all](#info-to-run-all)
+  - [other](#other)
+    - [best practice start-up](#best-practice-start-up)
+    - [production](#production)
 
 ---
 
 ## about
 
 this repo is used to deploy **elasticsearch** with **kibana** as **SIEM**
+> _with **swarm** and **traefik** support_
 
-then deploy **elastic-agent** for handle device integration to collect logs
+- then deploy
+  - **elastic-agent** for handle device integration to collect logs
+  - **winlog-beats** with **sysmon** on windows clients
+  - **opnsense** with **zenarmor** and **syslog**
 
-\+ deploy **logstash** from [pfelk](https://github.com/pfelk/pfelk)
+- \+ deploy **logstash** from [pfelk](https://github.com/pfelk/pfelk)
+- \+ deploy **logstash** with [helk](https://github.com/Cyb3rWard0g/HELK)
+  > some files copied from this repo
 
 ---
 
@@ -32,7 +42,7 @@ $docker-swarm-compose elasticsearch
 $docker-swarm-compose kibana
 $docker-swarm-compose logstash
 $docker-swarm-compose elastic-agent
-$docker-swarm-compose apm-server
+$docker-swarm-compose apm
 $docker-swarm-compose filebeat
 ```
 

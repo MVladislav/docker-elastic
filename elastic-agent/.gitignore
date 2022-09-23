@@ -1,6 +1,4 @@
 *
-!.git
-!.github
 !.gitignore
 !.gitempty
 
@@ -8,16 +6,10 @@
 !docker-*
 !Dockerfile
 
-!CHANGELOG.md
-!LICENCE
 !README.md
 
 !config/
 config/*
 
 !config/.gitempty
-!config/*_template.yml
-
-!config/ssl/
-config/ssl/*
-!config/ssl/.gitempty
+!config/elastic-agent.yml

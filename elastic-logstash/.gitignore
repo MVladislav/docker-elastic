@@ -1,6 +1,4 @@
 *
-!.git
-!.github
 !.gitignore
 !.gitempty
 
@@ -8,15 +6,13 @@
 !docker-*
 !Dockerfile
 
-!CHANGELOG.md
-!LICENCE
 !README.md
 
 !config/
 config/*
 
 !config/.gitempty
-!config/*_template.yml
+!config/*.yml
 
 !config/pfelk/
 !config/pfelk/**
@@ -26,6 +22,8 @@ config/pfelk/databases/rule-names.csv
 config/pfelk/conf.d/20-interfaces.pfelk
 config/pfelk/conf.d/30-geoip.pfelk
 
-!config/ssl/
-config/ssl/*
-!config/ssl/.gitempty
+!config/sysmon/
+!config/sysmon/**
+
+!config/unifi/
+!config/unifi/**

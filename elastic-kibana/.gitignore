@@ -1,6 +1,4 @@
 *
-!.git
-!.github
 !.gitignore
 !.gitempty
 
@@ -8,13 +6,8 @@
 !docker-*
 !Dockerfile
 
-!CHANGELOG.md
-!LICENCE
 !README.md
 
 !config/
 config/*
 !config/*_template.yml
-!config/ssl/
-config/ssl/*
-!config/ssl/.gitempty

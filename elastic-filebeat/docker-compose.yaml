@@ -5,8 +5,9 @@ services:
   ##############################################################################
   ##############################################################################
   filebeat:
-    image: docker.elastic.co/beats/filebeat:${VERSION:-8.1.3}
+    image: docker.elastic.co/beats/filebeat:${VERSION:-8.2.0}
     env_file: .env
+    user: root
     cap_drop:
       - ALL
     cap_add:
@@ -32,6 +33,14 @@ services:
           - "node.role==${NODE_ROLE:-manager}"
       restart_policy:
         condition: on-failure
+      labels:
+        - traefik.enable=true
+        - traefik.docker.lbswarm=true
+        - traefik.docker.network=proxy
+
+        - traefik.udp.routers.filebeat-netflow.entrypoints=netflow
+        - traefik.udp.routers.filebeat-netflow.service=filebeat-netflow
+        - traefik.udp.services.filebeat-netflow.loadbalancer.server.port=${PORT_NETLFOW:-2055}
     environment:
       ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
       network.host: 0.0.0.0
@@ -42,10 +51,18 @@ services:
       - source: m_threatintel_config
         target: /usr/share/filebeat/modules.d/threatintel.yml
         mode: 0440
+      - source: m_netflow_config
+        target: /usr/share/filebeat/modules.d/netflow.yml
+        mode: 0440
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/log/:/var/log
     networks:
+      proxy: {}
       elasticsearch: {}
       kibana: {}
     restart: always
@@ -54,6 +71,8 @@ services:
 ################################################################################
 ################################################################################
 networks:
+  proxy:
+    external: true
   elasticsearch:
     name: ${ELASTICSEARCH_NETWORK_NAME:-elasticsearch}
     external: true
@@ -66,3 +85,5 @@ configs:
     file: $PWD/config/filebeat.yml
   m_threatintel_config:
     file: $PWD/config/modules.d/threatintel.yml
+  m_netflow_config:
+    file: $PWD/config/modules.d/netflow.yml

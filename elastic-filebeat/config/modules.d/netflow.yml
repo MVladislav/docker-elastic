@@ -1,0 +1,15 @@
+# Module: netflow
+# Docs: https://www.elastic.co/guide/en/beats/filebeat/7.9/filebeat-module-netflow.html
+
+- module: netflow
+  log:
+    enabled: true
+    var:
+      netflow_host: 0.0.0.0
+      netflow_port: 2055
+      # queue_size: 64000
+      # max_message_size: 1000
+      # expiration_timeout: 3600m
+      # read_buffer: 100MiB
+      # detect_sequence_reset: true
+      tags: ["netflow", "forwarded"]

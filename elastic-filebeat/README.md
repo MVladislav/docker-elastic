@@ -9,8 +9,7 @@
 - [SETUP](#setup)
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
-    - [create/copy filebeat conf file](#createcopy-filebeat-conf-file)
-  - [best practice start-up](#best-practice-start-up)
+  - [create index/dasboards/pipelines](#create-indexdasboardspipelines)
   - [References](#references)
 
 ---
@@ -26,18 +25,20 @@ NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-VERSION=8.1.3
+VERSION=8.2.0
 
 ELK_MEM_USE_GB=1g
 
-ELASTICSEARCH_PROTOCOL=https
+PORT_NETLFOW=2055
+
+ELASTICSEARCH_PROTOCOL=http
 ELASTICSEARCH_HOST=elasticsearch
 ELASTICSEARCH_PORT=9200
 
 ELASTICSEARCH_USERNAME=elastic
 ELASTICSEARCH_PASSWORD=<PASSWORD>
 
-KIBANA_PROTOCOL=https
+KIBANA_PROTOCOL=http
 KIBANA_HOST=kibana
 KIBANA_PORT=5601
 
@@ -50,20 +51,14 @@ ELASTICSEARCH_NETWORK_NAME=elasticsearch
 KIBANA_NETWORK_NAME=kibana
 ```
 
-### create/copy filebeat conf file
-
-> do not forget to edit it, with your settings
-
-```sh
-$cp config/filebeat_template.yml config/filebeat.yml
-```
-
 ## create index/dasboards/pipelines
 
-> after filbeat stats, you can run:
+> after filebeat stats, you can run:
+>
+> _many useless dashboard wiil be installed_
 
 ```sh
-$docker exec <CONTAINER> filebeat setup -e
+$docker exec "$(docker ps -q -f name=filebeat)" filebeat setup --dashboards -e
 ```
 
 ---
@@ -74,3 +69,5 @@ $docker exec <CONTAINER> filebeat setup -e
 - <https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation-configuration.html>
 - <https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-module-threatintel.html>
 - <https://www.elastic.co/blog/ingesting-threat-data-with-threat-intel-filebeat-module>
+- <https://www.sarulabs.com/post/5/2019-08-12/sending-docker-logs-to-elasticsearch-and-kibana-with-filebeat.html>
+- <https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-module-netflow.html>

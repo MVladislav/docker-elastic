@@ -1,0 +1,85 @@
+version: "3.8"
+
+services:
+  ##############################################################################
+  ##############################################################################
+  ##############################################################################
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:${VERSION:-8.2.0}
+    env_file: .env
+    user: root
+    cap_drop:
+      - ALL
+    cap_add:
+      - SYS_PTRACE
+      - DAC_READ_SEARCH
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65535
+        hard: 65535
+      fsize: -1
+      as: -1
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        max_replicas_per_node: 1
+        constraints:
+          - "node.role==${NODE_ROLE:-manager}"
+      restart_policy:
+        condition: on-failure
+    environment:
+      ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
+      network.host: 0.0.0.0
+    configs:
+      - source: metricbeat_config
+        target: /usr/share/metricbeat/metricbeat.yml
+        mode: 0440
+      - source: m_docker_config
+        target: /usr/share/metricbeat/modules.d/docker.yml
+        mode: 0440
+      - source: m_linux_config
+        target: /usr/share/metricbeat/modules.d/linux.yml
+        mode: 0440
+      - source: m_system_config
+        target: /usr/share/metricbeat/modules.d/system.yml
+        mode: 0440
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /proc:/hostfs/proc:ro
+      - /:/hostfs:ro
+      - /var/log/:/var/log
+    networks:
+      elasticsearch: {}
+      kibana: {}
+    restart: always
+
+################################################################################
+################################################################################
+################################################################################
+networks:
+  elasticsearch:
+    name: ${ELASTICSEARCH_NETWORK_NAME:-elasticsearch}
+    external: true
+  kibana:
+    name: ${KIBANA_NETWORK_NAME:-kibana}
+    external: true
+
+configs:
+  metricbeat_config:
+    file: $PWD/config/metricbeat.yml
+  m_docker_config:
+    file: $PWD/config/modules.d/docker.yml
+  m_linux_config:
+    file: $PWD/config/modules.d/linux.yml
+  m_system_config:
+    file: $PWD/config/modules.d/system.yml

@@ -6,7 +6,7 @@ services:
   ######################################################################################
   ######################################################################################
   kibana:
-    image: docker.elastic.co/kibana/kibana:${VERSION:-8.1.3}
+    image: docker.elastic.co/kibana/kibana:${VERSION:-8.2.0}
     env_file: .env
     ulimits:
       memlock:
@@ -34,7 +34,7 @@ services:
         - traefik.http.routers.kibana.rule=Host(`${DOMAIN?domain variable not set}`)
         - traefik.http.routers.kibana.tls=true
         - traefik.http.routers.kibana.service=kibana
-        - traefik.http.services.kibana.loadbalancer.server.scheme=${PROTOCOL:-https}
+        - traefik.http.services.kibana.loadbalancer.server.scheme=${PROTOCOL:-http}
         - traefik.http.services.kibana.loadbalancer.server.port=${PORT:-5601}
         - traefik.http.routers.kibana.middlewares=${MIDDLEWARE_SECURED:-protected-secured@file}
     # ports:
@@ -47,13 +47,10 @@ services:
     configs:
       - source: config_file
         target: /usr/share/kibana/config/kibana.yml
-      - source: ssl_key
-        target: ${SERVER_SSL_KEY:-/usr/share/kibana/config/certs/kibana_node.key}
-      - source: ssl_certificate
-        target: ${SERVER_SSL_CERTIFICATE:-/usr/share/kibana/config/certs/kibana_node.crt}
     environment:
       ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
       network.host: 0.0.0.0
+      NODE_OPTIONS: "--max-old-space-size=1800"
     networks:
       default: {}
       proxy: {}
@@ -80,7 +77,3 @@ volumes:
 configs:
   config_file:
     file: $PWD/config/kibana.yml
-  ssl_key:
-    file: $PWD/config/ssl/kibana_node.key
-  ssl_certificate:
-    file: $PWD/config/ssl/kibana_node.crt

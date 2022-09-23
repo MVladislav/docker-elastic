@@ -9,13 +9,15 @@
 - [SETUP](#setup)
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
+  - [commands](#commands)
+    - [create ca-fingerprint](#create-ca-fingerprint)
+    - [reload dashboard](#reload-dashboard)
   - [endpoint protection - client setup](#endpoint-protection---client-setup)
     - [install](#install)
     - [enroll and run:](#enroll-and-run)
     - [alternative](#alternative)
       - [install](#install-1)
       - [enroll and run:](#enroll-and-run-1)
-  - [best practice start-up](#best-practice-start-up)
   - [References](#references)
 
 ---
@@ -33,11 +35,11 @@ NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-VERSION=8.1.3
+VERSION=8.2.0
 
-DOMAIN_AGENT=agent.home.local
-PROTOCOL_AGENT=http
-PORT_AGENT=8220
+DOMAIN=agent.home.local
+PROTOCOL=http
+PORT=8220
 # default-secured@file | protected-secured@file | admin-secured@file
 MIDDLEWARE_SECURED=default-secured@file
 
@@ -46,14 +48,14 @@ PORT_PFSENSE=9003
 
 ELK_MEM_USE_GB=1g
 
-ELASTICSEARCH_PROTOCOL=https
+ELASTICSEARCH_PROTOCOL=http
 ELASTICSEARCH_HOST=elasticsearch
 ELASTICSEARCH_PORT=9200
 
 ELASTICSEARCH_USERNAME=elastic
 ELASTICSEARCH_PASSWORD=
 
-KIBANA_PROTOCOL=https
+KIBANA_PROTOCOL=http
 KIBANA_HOST=kibana
 KIBANA_PORT=5601
 
@@ -70,17 +72,15 @@ FLEET_SERVER_INSECURE_HTTP=false
 ELASTICSEARCH_NETWORK_NAME=elasticsearch
 ```
 
-### create/copy elastic-agent conf file
-
-> do not forget to edit it, with your settings
-
-```sh
-$cp config/elastic-agent_template.yml config/elastic-agent.yml
-```
-
 ---
 
 ## commands
+
+### create ca-fingerprint
+
+```sh
+$openssl x509 -noout -fingerprint -sha256 -in ca.crt | cut -d "=" -f 2 | base64 -w0 
+```
 
 ### reload dashboard
 

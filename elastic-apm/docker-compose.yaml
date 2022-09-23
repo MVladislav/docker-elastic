@@ -5,7 +5,7 @@ services:
   ##############################################################################
   ##############################################################################
   apm-server:
-    image: docker.elastic.co/apm/apm-server:${VERSION:-8.1.3}
+    image: docker.elastic.co/apm/apm-server:${VERSION:-8.2.0}
     env_file: .env
     cap_drop:
       - ALL
@@ -33,17 +33,17 @@ services:
           - "node.role==${NODE_ROLE:-manager}"
       restart_policy:
         condition: on-failure
-      labels:
-        - traefik.enable=true
-        - traefik.docker.lbswarm=true
-        - traefik.docker.network=proxy
-        - traefik.http.routers.apm.entrypoints=https
-        - traefik.http.routers.apm.rule=Host(`${DOMAIN?domain variable not set}`)
-        - traefik.http.routers.apm.tls=true
-        - traefik.http.routers.apm.service=apm
-        - traefik.http.services.apm.loadbalancer.server.scheme=${PROTOCOL:-http}
-        - traefik.http.services.apm.loadbalancer.server.port=${PORT:-8200}
-        - traefik.http.routers.apm.middlewares=${MIDDLEWARE_SECURED:-default-secured@file}
+      # labels:
+      #   - traefik.enable=true
+      #   - traefik.docker.lbswarm=true
+      #   - traefik.docker.network=proxy
+      #   - traefik.http.routers.apm.entrypoints=https
+      #   - traefik.http.routers.apm.rule=Host(`${DOMAIN?domain variable not set}`)
+      #   - traefik.http.routers.apm.tls=true
+      #   - traefik.http.routers.apm.service=apm
+      #   - traefik.http.services.apm.loadbalancer.server.scheme=${PROTOCOL:-http}
+      #   - traefik.http.services.apm.loadbalancer.server.port=${PORT:-8200}
+      #   - traefik.http.routers.apm.middlewares=${MIDDLEWARE_SECURED:-default-secured@file}
     # ports:
     #   - target: 8200
     #     published: ${PORT:-8200}
@@ -52,6 +52,15 @@ services:
     environment:
       ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
       network.host: 0.0.0.0
+      ELASTICSEARCH_PROTOCOL: ${ELASTICSEARCH_PROTOCOL:-http}
+      ELASTICSEARCH_HOST: ${ELASTICSEARCH_HOST:-elasticsearch}
+      ELASTICSEARCH_PORT: ${ELASTICSEARCH_PORT:-9200}
+      ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-elastic}
+      KIBANA_PROTOCOL: ${KIBANA_PROTOCOL:-http}
+      KIBANA_HOST: ${KIBANA_HOST:-kibana}
+      KIBANA_PORT: ${KIBANA_PORT:-5601}
+      KIBANA_USERNAME: ${KIBANA_USERNAME:-elastic}
+      SSL_VERIFICATION_MODE: ${SSL_VERIFICATION_MODE:-none}
     configs:
       - source: apm_config
         target: /usr/share/apm-server/apm-server.yml
@@ -68,7 +77,7 @@ services:
     healthcheck:
       interval: 10s
       retries: 12
-      test: curl --write-out 'HTTP %{http_code}' -k --fail --silent --output /dev/null ${PROTOCOL:-https}://localhost:8200/
+      test: curl --write-out 'HTTP %{http_code}' -k --fail --silent --output /dev/null ${PROTOCOL:-http}://localhost:${PORT:-8200}/
 
 ################################################################################
 ################################################################################
@@ -85,10 +94,7 @@ networks:
   kibana:
     name: ${KIBANA_NETWORK_NAME:-kibana}
     external: true
-#
-# volumes:
-#   data: {}
-#
+
 configs:
   apm_config:
     file: $PWD/config/apm-server.yml

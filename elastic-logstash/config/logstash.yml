@@ -1,0 +1,19 @@
+# logstash.yml
+################################################################################
+# Version: 22.04                                                               #
+# Required: Yes (DOCKER ONLY)                                                  #
+# Description: This is a required file for a Docker installation               #
+#                                                                              #
+################################################################################
+#
+http.host: "0.0.0.0"
+#path.config: /usr/share/logstash/pipeline/pipelines.yml
+
+pipeline.batch.size: 500
+config.reload.automatic: ${LOGSTAST_RELOAD_AUTOMATIC:true}
+config.reload.interval: 60s
+
+xpack.monitoring.enabled: ${XPACK_MONITORING_ENABLED:true}
+xpack.monitoring.elasticsearch.hosts: ${ELASTICSEARCH_PROTOCOL:https}://${ELASTICSEARCH_HOST:elasticsearch}:${ELASTICSEARCH_PORT:9200}
+xpack.monitoring.elasticsearch.username: ${ELASTICSEARCH_USERNAME:logstash_system}
+xpack.monitoring.elasticsearch.password: ${ELASTICSEARCH_PASSWORD:}

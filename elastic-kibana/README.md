@@ -9,11 +9,11 @@
 - [SETUP](#setup)
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
-    - [create/copy kibana conf file](#createcopy-kibana-conf-file)
-    - [create ssl files](#create-ssl-files)
+    - [create/copy kibana conf file, from template](#createcopy-kibana-conf-file-from-template)
   - [dashboard](#dashboard)
+    - [add missing `@timestamp` or any other times](#add-missing-timestamp-or-any-other-times)
+    - [add missing `event.category`](#add-missing-eventcategory)
     - [index patter](#index-patter)
-  - [best practice start-up](#best-practice-start-up)
   - [Dahboard Examples](#dahboard-examples)
   - [References](#references)
 
@@ -30,7 +30,7 @@ NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-VERSION=8.1.3
+VERSION=8.2.0
 
 DOMAIN=kibana.home.local
 PROTOCOL=http
@@ -40,33 +40,17 @@ MIDDLEWARE_SECURED=protected-secured@file
 
 ELK_MEM_USE_GB=1g
 
-# ELASTICSEARCH_PROTOCOL=https
-# ELASTICSEARCH_HOST=elasticsearch
-# ELASTICSEARCH_PORT=9200
-#
-# ELASTICSEARCH_USERNAME=kibana_system
-# ELASTICSEARCH_PASSWORD=<PASSWORD>
-# ELASTICSEARCH_SSL_VERIFICATIONMODE=none
-#
-# XPACK_REPORTING_ENCRYPTIONKEY=<ADD_HERE (32_characters)>
-# XPACK_SECURITY_ENCRYPTIONKEY=<ADD_HERE (32_characters)>
-# XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=<ADD_HERE (32_characters)>
-
 ELASTICSEARCH_NETWORK_NAME=elasticsearch
 ```
 
-### create/copy kibana conf file
+### create/copy kibana conf file, from template
 
-do not forget to edit it, with your settings
+> do not forget to edit it, with your settings
+>
+> _current env variable not work, that why needed to edit the conf file_
 
 ```sh
 $cp config/kibana_template.yml config/kibana.yml
-```
-
-### create ssl files
-
-```sh
-$openssl genrsa -out config/kibana_node.pem 4096 && openssl req -new -x509 -sha256 -key config/ssl/kibana_node_key.pem -out config/ssl/kibana_node.pem -days 365 -subj '/CN=kibana'
 ```
 
 ---
@@ -154,6 +138,9 @@ PUT <INDEXNAME>-*/_mapping
 
 - <https://github.com/psychogun/zenarmor-kibana-dashboards>
 - <https://github.com/pfelk/pfelk/tree/main/etc/pfelk/dashboard>
+- winlogbeat:
+  - <https://github.com/elastic/beats/tree/main/x-pack/winlogbeat/module/security/_meta/kibana/7/dashboard>
+  - <https://github.com/elastic/beats/tree/main/x-pack/winlogbeat/module/powershell/_meta/kibana/7/dashboard>
 
 ---
 

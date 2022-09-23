@@ -9,11 +9,8 @@
 - [SETUP](#setup)
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
-    - [create/copy elasticsearch conf file [optional (not active in composer)]](#createcopy-elasticsearch-conf-file-optional-not-active-in-composer)
     - [create password file, for initial elastic password](#create-password-file-for-initial-elastic-password)
-    - [create ssl files](#create-ssl-files)
-  - [best practice start-up](#best-practice-start-up)
-  - [production](#production)
+  - [Other commands](#other-commands)
   - [References](#references)
 
 ---
@@ -29,7 +26,7 @@ NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-VERSION=8.1.3
+VERSION=8.2.0
 
 DOMAIN=elastic.home.local
 PROTOCOL=http
@@ -37,16 +34,16 @@ PORT=9200
 # default-secured@file | protected-secured@file | admin-secured@file
 MIDDLEWARE_SECURED=default-secured@file
 
-ELK_MEM_USE_GB=3g
+ELK_MEM_USE_GB=2g
 
 ELASTIC_PASSWORD_FILE=/run/secrets/bootstrapPassword.txt
+# ELASTIC_PASSWORD=
+
 NETWORK_HOST=0.0.0.0
 DISCOVERY_TYPE=single-node
-NODE_NAME=elasticsearch-docker-default-1
+NODE_NAME=elasticsearch-docker-home-01
 CLUSTER_NAME=elasticsearch-docker-cluster
 
-BOOTSTRAP_MEMORY_LOCK=true
-NODE_STORE_ALLOW_MMAP=false
 INGEST_GEOIP_DOWNLOADER_ENABLED=true
 
 XPACK_SECURITY_ENABLED=true
@@ -57,27 +54,14 @@ XPACK_SECURITY_AUTHC_REALMS_NATIVE_NATIVE1_ORDER=1
 XPACK_SECURITY_AUTHC_API_KEY_ENABLED=true
 
 XPACK_SECURITY_TRANSPORT_SSL_ENABLED=true
-XPACK_SECURITY_HTTP_SSL_ENABLED=true
+XPACK_SECURITY_HTTP_SSL_ENABLED=false
 
-XPACK_SECURITY_HTTP_SSL_KEY=certs/elasticsearch_node.key
-XPACK_SECURITY_HTTP_SSL_CERTIFICATE=certs/elasticsearch_node.crt
-XPACK_SECURITY_TRANSPORT_SSL_KEY=certs/elasticsearch_node.key
-XPACK_SECURITY_TRANSPORT_SSL_CERTIFICATE=certs/elasticsearch_node.crt
-
-XPACK_HTTP_SSL_VERIFICATION_MODE=certificate # certificate | none
-XPACK_SECURITY_HTTP_SSL_VERIFICATION_MODE=certificate # certificate | none
-XPACK_SECURITY_TRANSPORT_SSL_VERIFICATION_MODE=certificate # certificate | none
+XPACK_HTTP_SSL_VERIFICATION_MODE=none # certificate | none
+XPACK_SECURITY_HTTP_SSL_VERIFICATION_MODE=none # certificate | none
+XPACK_SECURITY_TRANSPORT_SSL_VERIFICATION_MODE=none # certificate | none
 
 XPACK_LICENSE_SELF_GENERATED_TYPE=basic # basic | trial
 ACTION_DESTRUCTIVE_REQUIRES_NAME=false
-```
-
-### create/copy elasticsearch conf file [optional (not active in composer)]
-
-do not forget to edit it, with your settings
-
-```sh
-$cp config/elasticsearch_template.yml config/elasticsearch.yml
 ```
 
 ### create password file, for initial elastic password
@@ -95,13 +79,31 @@ if something goes wrong you can reset it this way:
 > can also be used to set pw for user like 'kibana_system, logstash_system, ...'
 
 ```sh
-$docker exec -it elasticsearch /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
+$docker exec -it "$(docker ps -q -f name=elasticsearch)" /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
+$docker exec -it "$(docker ps -q -f name=elasticsearch)" /usr/share/elasticsearch/bin/elasticsearch-reset-password -u kibana_system
+$docker exec -it "$(docker ps -q -f name=elasticsearch)" /usr/share/elasticsearch/bin/elasticsearch-reset-password -u logstash_system
 ```
 
-### create ssl files
+---
+
+## Other commands
+
+delete all:
 
 ```sh
-$openssl genrsa -out config/ssl/elasticsearch_node.key 4096 && openssl req -new -x509 -sha256 -key config/ssl/elasticsearch_node.key -out config/ssl/elasticsearch_node.crt -days 365 -subj '/CN=elasticsearch'
+$curl -u 'USERNAME:PASSWORD' -XDELETE ELASTICSEARCHIP:9200/*
+```
+
+delete all-indices:
+
+```sh
+$curl -u 'USERNAME:PASSWORD' -XDELETE ELASTICSEARCHIP:9200/indices
+```
+
+get all indices with size:
+
+```sh
+$curl -u 'USERNAME:PASSWORD' -XGET  localhost:9200/_cat/indices?v
 ```
 
 ---
@@ -112,3 +114,4 @@ $openssl genrsa -out config/ssl/elasticsearch_node.key 4096 && openssl req -new 
 - <https://www.docker.elastic.co/r/elasticsearch/elasticsearch>
 - <https://github.com/shazChaudhry/docker-elastic>
 - <https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html>
+- <https://www.elastic.co/guide/en/elasticsearch/client/curator/5.x/pip.html>

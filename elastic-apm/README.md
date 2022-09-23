@@ -9,8 +9,7 @@
 - [SETUP](#setup)
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
-    - [create/copy apm conf file](#createcopy-apm-conf-file)
-  - [best practice start-up](#best-practice-start-up)
+  - [elastic setup](#elastic-setup)
   - [References](#references)
 
 ---
@@ -26,7 +25,7 @@ NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-VERSION=8.1.3
+VERSION=8.2.0
 
 DOMAIN=apm.home.local
 PROTOCOL=http
@@ -36,14 +35,14 @@ MIDDLEWARE_SECURED=default-secured@file
 
 ELK_MEM_USE_GB=1g
 
-ELASTICSEARCH_PROTOCOL=https
+ELASTICSEARCH_PROTOCOL=http
 ELASTICSEARCH_HOST=elasticsearch
 ELASTICSEARCH_PORT=9200
 
 ELASTICSEARCH_USERNAME=elastic
 ELASTICSEARCH_PASSWORD=<PASSWORD>
 
-KIBANA_PROTOCOL=https
+KIBANA_PROTOCOL=http
 KIBANA_HOST=kibana
 KIBANA_PORT=5601
 
@@ -56,13 +55,10 @@ ELASTICSEARCH_NETWORK_NAME=elasticsearch
 KIBANA_NETWORK_NAME=kibana
 ```
 
-### create/copy apm conf file
+## elastic setup
 
-> do not forget to edit it, with your settings
-
-```sh
-$cp config/apm-server_template.yml config/apm-server.yml
-```
+you need to go in kibana under `Management > Integration > Elastic APM`
+and add the agent to elastic, else this service will not connect with elastic.
 
 ---
 

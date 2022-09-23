@@ -1,6 +1,10 @@
-/*
-!.git
-!.github
+*
+!.git/
+!.git/**
+!.github/
+!.github/**
+!.vscode/
+!.vscode/**
 !.gitignore
 !.gitempty
 
@@ -34,8 +38,8 @@
 
 # ---------------------
 
-!/elasticsearch/
+!/elastic-metricbeat/
 
 # ---------------------
 
-!/services/
+!/elasticsearch/
