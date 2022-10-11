@@ -71,7 +71,7 @@ example command to create it:
 > change it to your secure password
 
 ```sh
-$echo 'swordfish$4' > config/bootstrapPassword.txt && chmod 600 config/bootstrapPassword.txt
+$echo 'swordfish$4' > config/elastic_secret.txt
 ```
 
 if something goes wrong you can reset it this way:

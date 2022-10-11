@@ -43,26 +43,16 @@ services:
     #     protocol: tcp
     #     mode: host
     configs:
-      - source: pw_file
-        target: ${ELASTIC_PASSWORD_FILE:-/run/secrets/bootstrapPassword.txt}
-        mode: 0400
-        uid: "1000"
-        gid: "1000"
       # only used for internal secured transport, for work with "xpack.security.enabled"
       - source: elk_cert_file
         target: /usr/share/elasticsearch/config/certs/elastic-certificates.p12
-        # mode: 0400
-        # uid: "1000"
-        # gid: "1000"
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - elasticsearch:/usr/share/elasticsearch/data
+    secrets:
+      - elastic_secret
     environment:
       ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-3g} -Xmx${ELK_MEM_USE_GB:-3g}
       network.host: ${NETWORK_HOST:-0.0.0.0}
 
-      ELASTIC_PASSWORD_FILE: ${ELASTIC_PASSWORD_FILE:-/run/secrets/bootstrapPassword.txt}
+      ELASTIC_PASSWORD_FILE: ${ELASTIC_PASSWORD_FILE:-/run/secrets/elastic_secret}
 
       ES_PORT: ${PORT:-9200}
       discovery.type: ${DISCOVERY_TYPE:-single-node}
@@ -97,6 +87,10 @@ services:
 
       http.cors.enabled: ${HTTP_CORS_ENABLED:-true}
       http.cors.allow-origin: ${HTTP_CORS_ALLOW-ORIGIN:-*}
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - elasticsearch:/usr/share/elasticsearch/data
     networks:
       default: {}
       proxy: {}
@@ -121,7 +115,9 @@ volumes:
   elasticsearch: {}
 
 configs:
-  pw_file:
-    file: $PWD/config/bootstrapPassword.txt
   elk_cert_file:
     file: $PWD/config/elastic-certificates.p12
+
+secrets:
+  elastic_secret:
+    file: config/secrets/elastic_secret.txt
