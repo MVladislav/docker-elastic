@@ -30,7 +30,7 @@ NODE_ID=
 NODE_ROLE=manager
 NETWORK_MODE=overlay
 
-VERSION=8.2.0
+VERSION=8.4.3
 
 DOMAIN=kibana.home.local
 PROTOCOL=http
@@ -45,13 +45,17 @@ ELASTICSEARCH_NETWORK_NAME=elasticsearch
 
 ### create/copy kibana conf file, from template
 
-> do not forget to edit it, with your settings
->
-> _current env variable not work, that why needed to edit the conf file_
+> copy and edit kibana temp file
 
 ```sh
 $cp config/kibana_template.yml config/kibana.yml
 ```
+
+> create password for `kibana_system` following way:
+>
+> > ```sh
+> > $docker exec -it "$(docker ps -q -f name=elasticsearch)" /usr/share/elasticsearch/bin/elasticsearch-reset-password -u kibana_system
+> > ```
 
 ---
 
