@@ -6,7 +6,8 @@ services:
   ######################################################################################
   ######################################################################################
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${VERSION:-8.2.0}
+    # https://www.docker.elastic.co/r/elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:${VERSION:-8.4.3}
     env_file: .env
     ulimits:
       memlock:
@@ -47,12 +48,15 @@ services:
       - source: elk_cert_file
         target: /usr/share/elasticsearch/config/certs/elastic-certificates.p12
     secrets:
-      - elastic_secret
+      - source: elastic_secret
+        uid: '1000'
+        gid: '1000'
+        mode: 0400
     environment:
       ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-3g} -Xmx${ELK_MEM_USE_GB:-3g}
       network.host: ${NETWORK_HOST:-0.0.0.0}
 
-      ELASTIC_PASSWORD_FILE: ${ELASTIC_PASSWORD_FILE:-/run/secrets/elastic_secret}
+      ELASTIC_PASSWORD_FILE: /run/secrets/elastic_secret
 
       ES_PORT: ${PORT:-9200}
       discovery.type: ${DISCOVERY_TYPE:-single-node}
@@ -65,7 +69,7 @@ services:
 
       xpack.security.enabled: ${XPACK_SECURITY_ENABLED:-true}
 
-      xpack.security.transport.ssl.enabled: ${XPACK_SECURITY_TRANSPORT_SSL_ENABLED:-true}
+      xpack.security.transport.ssl.enabled: ${XPACK_SECURITY_TRANSPORT_SSL_ENABLED:-true} # false
       xpack.security.transport.ssl.verification_mode: ${XPACK_SECURITY_TRANSPORT_SSL_VERIFICATION_MODE:-none}
       xpack.security.transport.ssl.keystore.path: /usr/share/elasticsearch/config/certs/elastic-certificates.p12
       xpack.security.transport.ssl.truststore.path: /usr/share/elasticsearch/config/certs/elastic-certificates.p12
@@ -82,7 +86,7 @@ services:
       xpack.monitoring.collection.enabled: ${XPACK_MONITORING_COLLECTION_ENABLED:-true}
       xpack.monitoring.collection.interval: ${XPACK_MONITORING_COLLECTION_INTERVAL:-30s}
 
-      xpack.license.self_generated.type: ${XPACK_LICENSE_SELF_GENERATED_TYPE:-basic}
+      xpack.license.self_generated.type: ${XPACK_LICENSE_SELF_GENERATED_TYPE:-basic} # basic | trial
       action.destructive_requires_name: ${ACTION_DESTRUCTIVE_REQUIRES_NAME:-false}
 
       http.cors.enabled: ${HTTP_CORS_ENABLED:-true}
@@ -116,7 +120,7 @@ volumes:
 
 configs:
   elk_cert_file:
-    file: $PWD/config/elastic-certificates.p12
+    file: $PWD/config/ssl/elastic-certificates.p12
 
 secrets:
   elastic_secret:
