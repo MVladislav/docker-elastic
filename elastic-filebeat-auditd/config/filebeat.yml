@@ -1,0 +1,79 @@
+###################### Filebeat Configuration Example #########################
+
+# This file is an example configuration file highlighting only the most common
+# options. The filebeat.reference.yml file from the same directory contains all the
+# supported options with more comments. You can use it as a reference.
+#
+# You can find the full configuration reference here:
+# https://www.elastic.co/guide/en/beats/filebeat/index.html
+
+# For more available modules and options, please see the filebeat.reference.yml sample
+# configuration file.
+
+# ============================== Filebeat inputs ===============================
+
+filebeat.inputs:
+  - type: log
+    enabled: false
+    paths:
+      - /var/log/*.log
+      - /host/log/*.log
+
+  # filestream is an input for collecting log messages from files.
+  - type: filestream
+    enabled: false
+    paths:
+      - /var/log/*.log
+
+# filebeat.autodiscover:
+#   providers:
+#     - type: docker
+#       hints.enabled: true
+
+# ============================== Filebeat modules ==============================
+
+filebeat.config.modules:
+  enabled: true
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+filebeat.modules:
+  - module: auditd
+    log:
+      enabled: true
+      var.paths:
+        - /host/log/audit/audit.log*
+      exclude_files:
+        - \.gz$
+
+# ================================= Dashboards =================================
+setup.dashboards.enabled: false
+
+# ------------------------------ Logstash Output -------------------------------
+output.logstash:
+  hosts: ["${GRAYLOG_HOST:graylog}:${GRAYLOG_PORT:5044}"]
+  # Enable SSL
+  ssl.enabled: ${GRAYLOG_SSL_ENABLE:true}
+
+  # Disable verification due to self-signed cert
+  ssl.verification_mode: ${GRAYLOG_SSL_VERIFICATION_MODE:none}
+
+  # Optional SSL. By default is off.
+  # List of root certificates for HTTPS server verifications
+  #ssl.certificate_authorities: ["/etc/pki/root/ca.pem"]
+
+  # Certificate for SSL client authentication
+  #ssl.certificate: "/etc/pki/client/cert.pem"
+
+  # Client Certificate Key
+  #ssl.key: "/etc/pki/client/cert.key"
+
+# ================================= Processors =================================
+processors:
+  - add_docker_metadata: ~
+  - decode_json_fields:
+      fields: ["message"]
+      process_array: false
+      max_depth: 1
+      target: ""
+      overwrite_keys: false

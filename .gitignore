@@ -27,6 +27,7 @@
 # ---------------------
 
 !/elastic-filebeat/
+!/elastic-filebeat-auditd/
 
 # ---------------------
 

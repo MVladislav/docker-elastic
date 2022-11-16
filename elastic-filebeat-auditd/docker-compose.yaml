@@ -1,0 +1,88 @@
+---
+version: "3.8"
+
+################################################################################
+################################################################################
+################################################################################
+
+x-basic-deploy:
+  &basic-deploy
+  mode: replicated
+  # mode: global
+  replicas: 1
+  placement:
+    max_replicas_per_node: 1
+    constraints:
+      - "node.role==${NODE_ROLE:-manager}"
+      - node.platform.os == linux
+  restart_policy:
+    condition: on-failure
+  resources:
+    limits:
+      memory: 1g
+
+x-basic:
+  &basic
+  cap_add:
+    - CHOWN
+    - DAC_OVERRIDE
+    - SETGID
+    - SETUID
+  ulimits:
+    memlock:
+      soft: -1
+      hard: -1
+    nofile:
+      soft: 65535
+      hard: 65535
+    fsize: -1
+    as: -1
+  tmpfs:
+    - /tmp
+  networks:
+    graylog: {}
+  restart: always
+
+################################################################################
+################################################################################
+################################################################################
+
+services:
+  ##############################################################################
+  ##############################################################################
+  ##############################################################################
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:${VERSION:-8.5.1}
+    <<: *basic
+    deploy: *basic-deploy
+    user: root
+    environment:
+      ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
+      network.host: 127.0.0.1
+    configs:
+      - source: filebeat_config
+        target: /usr/share/filebeat/filebeat.yml
+        mode: 0440 # check that is starting with a 0 (could be remove by autoformat)
+      - source: m_auditd_config
+        target: /usr/share/filebeat/modules.d/auditd.yml
+        mode: 0440 # check that is starting with a 0 (could be remove by autoformat)
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/log:/host/log:ro
+
+################################################################################
+################################################################################
+################################################################################
+networks:
+  graylog:
+    external: true
+
+configs:
+  filebeat_config:
+    file: $PWD/config/filebeat.yml
+  m_auditd_config:
+    file: $PWD/config/modules.d/auditd.yml
