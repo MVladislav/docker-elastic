@@ -5,7 +5,7 @@ services:
   ##############################################################################
   ##############################################################################
   filebeat:
-    image: docker.elastic.co/beats/filebeat:${VERSION:-8.2.0}
+    image: docker.elastic.co/beats/filebeat:${VERSION:-8.5.1}
     env_file: .env
     user: root
     cap_drop:
