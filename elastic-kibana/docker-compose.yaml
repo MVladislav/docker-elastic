@@ -6,7 +6,7 @@ services:
   ######################################################################################
   ######################################################################################
   kibana:
-    image: docker.elastic.co/kibana/kibana:${VERSION:-8.2.0}
+    image: docker.elastic.co/kibana/kibana:${VERSION:-8.4.3}
     env_file: .env
     ulimits:
       memlock:
@@ -42,8 +42,6 @@ services:
     #     published: ${PORT:-5601}
     #     protocol: tcp
     #     mode: host
-    volumes:
-      - kibana:/usr/share/kibana/data
     configs:
       - source: config_file
         target: /usr/share/kibana/config/kibana.yml
@@ -51,6 +49,10 @@ services:
       ES_JAVA_OPTS: -Xms${ELK_MEM_USE_GB:-1g} -Xmx${ELK_MEM_USE_GB:-1g}
       network.host: 0.0.0.0
       NODE_OPTIONS: "--max-old-space-size=1800"
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - kibana:/usr/share/kibana/data
     networks:
       default: {}
       proxy: {}

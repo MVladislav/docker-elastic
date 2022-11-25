@@ -9,7 +9,6 @@
 - [SETUP](#setup)
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
-  - [create index/dasboards/pipelines](#create-indexdasboardspipelines)
   - [References](#references)
 
 ---
@@ -29,36 +28,10 @@ VERSION=8.5.1
 
 ELK_MEM_USE_GB=1g
 
-PORT_NETLFOW=2055
-
-ELASTICSEARCH_PROTOCOL=http
-ELASTICSEARCH_HOST=elasticsearch
-ELASTICSEARCH_PORT=9200
-
-ELASTICSEARCH_USERNAME=elastic
-ELASTICSEARCH_PASSWORD=<PASSWORD>
-
-KIBANA_PROTOCOL=http
-KIBANA_HOST=kibana
-KIBANA_PORT=5601
-
-KIBANA_USERNAME=elastic
-KIBANA_PASSWORD=<PASSWORD>
-
-SSL_VERIFICATION_MODE=none
-
-ELASTICSEARCH_NETWORK_NAME=elasticsearch
-KIBANA_NETWORK_NAME=kibana
-```
-
-## create index/dasboards/pipelines
-
-> after filebeat stats, you can run:
->
-> _many useless dashboard wiil be installed_
-
-```sh
-$docker exec "$(docker ps -q -f name=filebeat)" filebeat setup --dashboards -e
+GRAYLOG_HOST=graylog
+GRAYLOG_PORT=5044
+GRAYLOG_SSL_ENABLE=true
+GRAYLOG_SSL_VERIFICATION_MODE=none
 ```
 
 ---

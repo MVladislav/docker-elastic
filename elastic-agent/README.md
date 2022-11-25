@@ -9,6 +9,7 @@
 - [SETUP](#setup)
   - [basic](#basic)
     - [create `.env` file following:](#create-env-file-following)
+  - [in kibana setup](#in-kibana-setup)
   - [commands](#commands)
     - [create ca-fingerprint](#create-ca-fingerprint)
     - [reload dashboard](#reload-dashboard)
@@ -28,7 +29,7 @@
 
 ### create `.env` file following:
 
-- _HINT: `FLEET_SERVER_SERVICE_TOKEN` should be changed, get from elasticsearch_
+- _HINT: `FLEET_SERVER_SERVICE_TOKEN` & `FLEET_SERVER_POLICY` should be changed, get from elasticsearch_
 
 ```env
 NODE_ID=
@@ -72,6 +73,14 @@ FLEET_SERVER_INSECURE_HTTP=false
 ELASTICSEARCH_NETWORK_NAME=elasticsearch
 ```
 
+## in kibana setup
+
+if self signed cert used, add following config to **Fleet Settings**:
+
+```yaml
+ssl.verification_mode: none
+```
+
 ---
 
 ## commands
@@ -79,7 +88,7 @@ ELASTICSEARCH_NETWORK_NAME=elasticsearch
 ### create ca-fingerprint
 
 ```sh
-$openssl x509 -noout -fingerprint -sha256 -in ca.crt | cut -d "=" -f 2 | base64 -w0 
+$openssl x509 -noout -fingerprint -sha256 -in ca.crt | cut -d "=" -f 2 | base64 -w0
 ```
 
 ### reload dashboard

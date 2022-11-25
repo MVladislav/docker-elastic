@@ -10,5 +10,11 @@
 
 !config/
 config/*
-!config/*_template.yml
-!config/elastic-certificates.p12
+
+!config/secrets/
+config/secrets/*
+!config/secrets/.gitempty
+
+!config/ssl/
+config/ssl/*
+!config/ssl/elastic-certificates.p12
